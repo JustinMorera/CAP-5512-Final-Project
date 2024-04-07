@@ -78,7 +78,7 @@ public class Search {
 		Parameters parmValues = new Parameters(args[0]);
 
 	//  Write Parameters To Summary Output File
-		String summaryFileName = Parameters.expID + "_summary.txt";
+		String summaryFileName = Parameters.expID + "_" + dateAndTime + "_" + startTime + "_summary.txt";
 		FileWriter summaryOutput = new FileWriter(summaryFileName);
 		parmValues.outputParameters(summaryOutput);
 
@@ -93,11 +93,8 @@ public class Search {
 	//	the appropriate class file (extending FitnessFunction.java) and add
 	//	an else_if block below to instantiate the problem.
  
-		if (Parameters.problemType.equals("NM")){
-				problem = new NumberMatch();
-		}
-		else if (Parameters.problemType.equals("OM")){
-				problem = new OneMax();
+		if (Parameters.problemType.equals("AC")){
+				problem = new AdaptiCritters();
 		}
 		else System.out.println("Invalid Problem Type");
 

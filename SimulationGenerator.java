@@ -1,0 +1,113 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Random;
+import java.util.Arrays;
+
+public class SimulationGenerator 
+{
+    public static int numGenes;
+	public static int numGens;
+	public static int numEvents;
+    public static double lethalChance;
+    public static void main(String[] args) 
+    {
+        numGenes = Integer.parseInt(args[0]);
+        numEvents = Integer.parseInt(args[1]);
+        numGens = Integer.parseInt(args[2]);
+        lethalChance = Double.parseDouble(args[3]);
+        int currentLine = 0;
+        Random random = new Random();
+
+        String[] template = new String[3 + numGenes + numEvents * (numGenes + 1)];
+        Arrays.fill(template, "");
+
+        template[currentLine++] = args[0]; // numGenes
+
+        // Randomly assign number of alleles for each gene and fitness values for each allele
+        for (int i = 0; i < numGenes; i++) 
+        {
+            int numAlleles = random.nextInt(3) + 2; // Range [2, 4]
+            template[currentLine] += numAlleles + " ";
+
+            for (int j = 0; j < numAlleles; j++) 
+            {
+                if (random.nextDouble() <= lethalChance) 
+                {
+                    template[currentLine] += "x ";
+                }
+                else 
+                {
+                    int allele = random.nextInt(11) - 5; // Range [-5, 5]
+                    if (allele >= 0)
+                    {
+                        template[currentLine] += "+";
+                    }
+                    template[currentLine] += allele + " ";
+                }
+            }
+            currentLine += 1;
+        }
+
+        template[currentLine++] = args[1] + " " + args[2]; // numEvents numGens
+
+        int[]eventGens = new int[numEvents];
+        for (int i = 0; i < numEvents; i++)
+        {
+            eventGens[i] = random.nextInt(numGens);
+        }
+        Arrays.sort(eventGens);
+        System.out.print("EventGens: ");
+        for (int event : eventGens)
+        {
+            System.out.print(event + " ");
+        }
+        System.out.print("\n");
+
+        for (int i = 0; i < numEvents; i++)
+        {
+            template[currentLine++] += eventGens[i];
+            for (int j = 0; j < numGenes; j++)
+            {
+                String[] tempStrings = template[1 + j].split(" ");
+                int numAlleles = Integer.parseInt(tempStrings[0]);
+
+                for (int k = 0; k < numAlleles; k++) 
+                {
+                    if (tempStrings[k + 1].equals("x"))
+                    {
+                        template[currentLine] += "x ";
+                    }
+                    else 
+                    {
+                        int allele = random.nextInt(11) - 5; // Range [-5, 5]
+                        if (allele >= 0)
+                        {
+                            template[currentLine] += "+";
+                        }
+                        template[currentLine] += allele + " ";
+                    }
+                }
+                currentLine += 1;
+            }
+        }
+
+        for (String line : template)
+        {
+            System.out.println(line);
+        }
+
+
+        // Write the template to a file
+        String filename = "AdaptiCritters_Template_numGenes_" + numGenes + "_numEvents_" + numEvents + "_numGenerations_" + numGens + "lethalChance_" + lethalChance + ".txt";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            for (String line : template) {
+                writer.println(line);
+            }
+            System.out.println("List successfully saved to list.txt");
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to file.");
+            e.printStackTrace();
+        }
+    }
+}

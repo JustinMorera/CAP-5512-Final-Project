@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.*;
 import java.text.*;
 
-public class NumberMatch extends FitnessFunction{
+public class AdaptiCritters extends FitnessFunction{
 
 /*******************************************************************************
 *                            INSTANCE VARIABLES                                *
@@ -25,7 +25,7 @@ public class NumberMatch extends FitnessFunction{
 *                              CONSTRUCTORS                                    *
 *******************************************************************************/
 
-	public NumberMatch () throws java.io.IOException {
+	public AdaptiCritters () throws java.io.IOException {
 
 		name = "Number Match Problem";
 

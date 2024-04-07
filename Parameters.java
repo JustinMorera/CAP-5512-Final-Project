@@ -37,7 +37,7 @@ public class Parameters
 
 	public static long seed;
 	public static int numGenes;
-	public static int geneSize;
+	// public static int geneSize;
 
 /*******************************************************************************
 *                              CONSTRUCTORS                                    *
@@ -66,8 +66,12 @@ public class Parameters
 		mutationRate = Double.parseDouble(parmInput.readLine().substring(30).trim());
 
 		seed = Long.parseLong(parmInput.readLine().substring(30).trim());
+
+		parmInput.close();
+		parmInput = new BufferedReader(new FileReader(dataInputFileName));
+
 		numGenes = Integer.parseInt(parmInput.readLine().substring(30).trim());
-		geneSize = Integer.parseInt(parmInput.readLine().substring(30).trim());
+		// geneSize = Integer.parseInt(parmInput.readLine().substring(30).trim());
 
 		parmInput.close();
 
@@ -108,7 +112,7 @@ public class Parameters
 
 		output.write("Random Number Seed           :  " + seed + "\n");
 		output.write("Number of Genes/Points       :  " + numGenes + "\n");
-		output.write("Size of Genes                :  " + geneSize + "\n");
+		// output.write("Size of Genes                :  " + geneSize + "\n");
 
 		output.write("\n\n");
 
