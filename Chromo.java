@@ -13,7 +13,41 @@ public class Chromo
 *                            STATIC VARIABLES                                  *
 *******************************************************************************/
 
-public static int[][] genome;
+	public static int[][] genome;
+	
+	static {
+    	    String filename = "AdaptiCritters_Template_numGenes_" + SimulationGenerator.numGenes
+    	            + "_numEvents_" + SimulationGenerator.numEvents
+    	            + "_numGenerations_" + SimulationGenerator.numGens
+    	            + "lethalChance_" + SimulationGenerator.lethalChance + ".txt";
+
+    	    try {
+    	        File template = new File(filename);
+    	        Scanner scanner = new Scanner(template);
+	
+    	        int numGenes = scanner.nextInt();
+    	        genome = new int[numGenes][];
+	
+    	        for (int i = 0; i < numGenes; i++) {
+    	            int numAlleles = scanner.nextInt();
+    	            genome[i] = new int[numAlleles];
+    	            
+    	            for (int j = 0; j < numAlleles; j++) {
+    	                if (scanner.hasNextInt()) {
+    	                    genome[i][j] = scanner.nextInt();
+    	                } else if (scanner.hasNext()) {
+    	                    String allele = scanner.next();
+    	                    genome[i][j] = allele.equals("x") ? Integer.MIN_VALUE : Integer.parseInt(allele);
+    	                }
+    	            }
+    	        }
+    	        scanner.close();
+	
+    	    } catch (FileNotFoundException e) {
+    	        System.out.println(filename + " does not exist");
+    	        e.printStackTrace();
+    	    }
+    	}
 
 /*******************************************************************************
 *                            INSTANCE VARIABLES                                *
@@ -35,7 +69,6 @@ public static int[][] genome;
 *******************************************************************************/
 
 	public Chromo(){
-
 		//  Set gene values to a randum sequence of 1's and 0's
 		char geneBit;
 		chromo = "";
