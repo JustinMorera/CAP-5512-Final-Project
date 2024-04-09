@@ -92,9 +92,61 @@ public class SimulationGenerator
             }
         }
 
-        for (String line : template)
-        {
-            System.out.println(line);
+
+	//Make console output pretty and interpretable
+	try {
+	    int i = 0;
+            while (i < template.length) {
+            	//Don't parse empty lines
+                if (template[i].trim().isEmpty()) {
+                    i++;
+                    continue;
+                }
+		
+		//Number of Genes
+                int numGenes = Integer.parseInt(template[i++].trim());
+                System.out.println("Number of Genes: " + numGenes);
+                
+                //Initial Genes
+                for (int gene = 0; gene < numGenes; gene++) {
+                    String[] alleles = template[i++].trim().split(" ");
+                    System.out.print("Gene " + (gene + 1) + " (" + alleles.length + " alleles):");
+                    
+                    for (String allele : alleles) {
+                        System.out.print(allele + " ");
+                    }
+                    
+                    System.out.println();
+                }
+
+		//Events and generations
+                String[] eventAndGeneration = template[i++].trim().split(" ");
+                int numEvents = Integer.parseInt(eventAndGeneration[0]);
+                int totalGenerations = Integer.parseInt(eventAndGeneration[1]);
+                System.out.println("Number of Events: " + numEvents + ", Total Generations: " + totalGenerations);
+
+		//How event modifies genes
+                while (i < template.length && numEvents-- > 0) {
+                    int generation = Integer.parseInt(template[i++].trim());
+                    System.out.println("Event at Generation: " + generation);
+                    
+                    for (int gene = 0; gene < numGenes; gene++) {
+                        if (i >= template.length) break;
+                        
+                        String[] modifications = template[i++].trim().split(" ");
+                        System.out.print("Gene " + (gene + 1) + ": ");
+                        
+                        for (String modification : modifications) {
+                            System.out.print(modification + " ");
+                        }
+                        
+                        System.out.println();
+                        }
+                }
+            }
+        }catch (NumberFormatException e) {
+            System.out.println("Error with the number format");
+            e.printStackTrace();
         }
 
 
