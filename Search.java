@@ -131,10 +131,10 @@ public class Search {
             List<Chromo> phylo = new ArrayList<Chromo>();
 
 			//	Initialize First Generation
-			for (int i = 0; i < member.size(); i++){
+			for (int i = 0; i < Parameters.popSize; i++){
 				member.add(new Chromo());
 				phylo.add(member.get(member.size() - 1));
-				child[i] = new Chromo();
+				// child[i] = new Chromo();
 			}
 
 			//	Begin Each Run
@@ -340,12 +340,17 @@ public class Search {
 								Chromo newChild = child.get(child.size() - 1);
 								newChild.chromo = Chromo.mateParents(member.get(parent1), member.get(parent2));
 								
-								//  Set fitness values back to zero
-								newChild.rawFitness = -1;   //  Fitness not yet evaluated
-								newChild.sclFitness = -1;   //  Fitness not yet scaled
-								newChild.proFitness = -1;   //  Fitness not yet proportionalized
+								// Not necessary due to constructor
+								// //  Set fitness values back to zero
+								// newChild.rawFitness = -1;   //  Fitness not yet evaluated
+								// newChild.sclFitness = -1;   //  Fitness not yet scaled
+								// newChild.proFitness = -1;   //  Fitness not yet proportionalized
 
-								// Add child to phylo
+								// Record child's parents
+								newChild.parents.add(member.get(parent1));
+								newChild.parents.add(member.get(parent2));
+
+								// Add child to phylogenetic tree
 								phylo.add(newChild);
 							}
 						}
@@ -356,10 +361,11 @@ public class Search {
 							Chromo newChild = child.get(child.size() - 1);
 							newChild.chromo = Chromo.mateParents(member.get(parent1), member.get(parent2));
 							
-							//  Set fitness values back to zero
-							newChild.rawFitness = -1;   //  Fitness not yet evaluated
-							newChild.sclFitness = -1;   //  Fitness not yet scaled
-							newChild.proFitness = -1;   //  Fitness not yet proportionalized
+							// Not necessary due to constructor
+							// //  Set fitness values back to zero
+							// newChild.rawFitness = -1;   //  Fitness not yet evaluated
+							// newChild.sclFitness = -1;   //  Fitness not yet scaled
+							// newChild.proFitness = -1;   //  Fitness not yet proportionalized
 
 							// Add child to phylo
 							phylo.add(newChild);

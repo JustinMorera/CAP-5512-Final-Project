@@ -8,6 +8,7 @@ import java.util.ArrayList;
 // import java.io.*;
 // import java.util.*;
 // import java.text.*;
+import java.util.ArrayList;
 
 public class Chromo
 {
@@ -26,7 +27,7 @@ public class Chromo
 	public double sclFitness;
 	public double proFitness;
 	public int id; // Tracks individual by ID# for phylogeny
-    public List<Chromo> parents;
+    public ArrayList<Chromo> parents;
     public int startGen;
     public int endGen;
 
@@ -49,6 +50,8 @@ public class Chromo
 		}
 
         this.parents = new ArrayList<Chromo>();
+		this.startGen = Search.G; // Current generation
+		this.endGen = -1; // Set when fitness drops below 0 or threshold
 		this.id = cumPop++; // ID = current cumPop then increments cumPop by 1
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled
@@ -119,6 +122,7 @@ public class Chromo
 	}
 
 	//  Produce a new child from two parents  **********************************
+	// Simply sends child's phenotype to Search.java which runs Constructor
 
 	public static int[] mateParents(Chromo parent1, Chromo parent2){
 
