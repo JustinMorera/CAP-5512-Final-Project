@@ -5,7 +5,7 @@
 
 import java.io.*;
 import java.util.*;
-import java.text.*;
+// import java.text.*;
 
 public class Search {
 
@@ -19,8 +19,8 @@ public class Search {
 
 	public static FitnessFunction problem;
 
-	public static Chromo[] member;
-	public static Chromo[] child;
+	public static ArrayList<Chromo> member;
+	public static ArrayList<Chromo> child;
 
 	public static Chromo bestOfGenChromo;
 	public static int bestOfGenR;
@@ -78,7 +78,10 @@ public class Search {
 		Parameters parmValues = new Parameters(args[0]);
 
 	//  Write Parameters To Summary Output File
-		String summaryFileName = Parameters.expID + "_" + dateAndTime + "_" + startTime + "_summary.txt";
+		String timeString = startTime.toString().replace(' ', '_').replace(':', '-');
+		System.out.println(timeString);
+		String summaryFileName = Parameters.expID + "_" + timeString + "_summary.txt";
+		System.out.println("This is the filename:\n" + summaryFileName + "\n end of file name");
 		FileWriter summaryOutput = new FileWriter(summaryFileName);
 		parmValues.outputParameters(summaryOutput);
 
@@ -104,8 +107,8 @@ public class Search {
 		r.setSeed(Parameters.seed);
 		memberIndex = new int[Parameters.popSize];
 		memberFitness = new double[Parameters.popSize];
-		member = new Chromo[Parameters.popSize];
-		child = new Chromo[Parameters.popSize];
+		member = new ArrayList<Chromo>();
+		child = new ArrayList<Chromo>();
 		bestOfGenChromo = new Chromo();
 		bestOfRunChromo = new Chromo();
 		bestOverAllChromo = new Chromo();
@@ -131,9 +134,10 @@ public class Search {
             List<Chromo> phylo = new ArrayList<Chromo>();
 
 			//	Initialize First Generation
-			for (int i=0; i<Parameters.popSize; i++){
-				phylo.add(member[i] = new Chromo());
-				// phylo.add(child[i] = new Chromo());
+			for (int i = 0; i < Parameters.popSize; i++){
+				member.add(new Chromo());
+				phylo.add(member.get(member.size() - 1));
+				// child[i] = new Chromo();
 			}
 
 			//	Begin Each Run
@@ -148,46 +152,46 @@ public class Search {
 				//	Test Fitness of Each Member
 				for (int i=0; i<Parameters.popSize; i++){
 
-					member[i].rawFitness = 0;
-					member[i].sclFitness = 0;
-					member[i].proFitness = 0;
+					member.get(i).rawFitness = 0;
+					member.get(i).sclFitness = 0;
+					member.get(i).proFitness = 0;
 
-					problem.doRawFitness(member[i]);
+					problem.doRawFitness(member.get(i));
 
-					sumRawFitness = sumRawFitness + member[i].rawFitness;
+					sumRawFitness = sumRawFitness + member.get(i).rawFitness;
 					sumRawFitness2 = sumRawFitness2 +
-						member[i].rawFitness * member[i].rawFitness;
+					member.get(i).rawFitness * member.get(i).rawFitness;
 
 					if (Parameters.minORmax.equals("max")){
-						if (member[i].rawFitness > bestOfGenChromo.rawFitness){
-							Chromo.copyB2A(bestOfGenChromo, member[i]);
+						if (member.get(i).rawFitness > bestOfGenChromo.rawFitness){
+							Chromo.copyB2A(bestOfGenChromo, member.get(i));
 							bestOfGenR = R;
 							bestOfGenG = G;
 						}
-						if (member[i].rawFitness > bestOfRunChromo.rawFitness){
-							Chromo.copyB2A(bestOfRunChromo, member[i]);
+						if (member.get(i).rawFitness > bestOfRunChromo.rawFitness){
+							Chromo.copyB2A(bestOfRunChromo, member.get(i));
 							bestOfRunR = R;
 							bestOfRunG = G;
 						}
-						if (member[i].rawFitness > bestOverAllChromo.rawFitness){
-							Chromo.copyB2A(bestOverAllChromo, member[i]);
+						if (member.get(i).rawFitness > bestOverAllChromo.rawFitness){
+							Chromo.copyB2A(bestOverAllChromo, member.get(i));
 							bestOverAllR = R;
 							bestOverAllG = G;
 						}
 					}
 					else {
-						if (member[i].rawFitness < bestOfGenChromo.rawFitness){
-							Chromo.copyB2A(bestOfGenChromo, member[i]);
+						if (member.get(i).rawFitness < bestOfGenChromo.rawFitness){
+							Chromo.copyB2A(bestOfGenChromo, member.get(i));
 							bestOfGenR = R;
 							bestOfGenG = G;
 						}
-						if (member[i].rawFitness < bestOfRunChromo.rawFitness){
-							Chromo.copyB2A(bestOfRunChromo, member[i]);
+						if (member.get(i).rawFitness < bestOfRunChromo.rawFitness){
+							Chromo.copyB2A(bestOfRunChromo, member.get(i));
 							bestOfRunR = R;
 							bestOfRunG = G;
 						}
-						if (member[i].rawFitness < bestOverAllChromo.rawFitness){
-							Chromo.copyB2A(bestOverAllChromo, member[i]);
+						if (member.get(i).rawFitness < bestOverAllChromo.rawFitness){
+							Chromo.copyB2A(bestOverAllChromo, member.get(i));
 							bestOverAllR = R;
 							bestOverAllG = G;
 						}
@@ -228,15 +232,15 @@ public class Search {
 
 				case 0:     // No change to raw fitness
 					for (int i=0; i<Parameters.popSize; i++){
-						member[i].sclFitness = member[i].rawFitness + .000001;
-						sumSclFitness += member[i].sclFitness;
+						member.get(i).sclFitness = member.get(i).rawFitness + .000001;
+						sumSclFitness += member.get(i).sclFitness;
 					}
 					break;
 
 				case 1:     // Fitness not scaled.  Only inverted.
 					for (int i=0; i<Parameters.popSize; i++){
-						member[i].sclFitness = 1/(member[i].rawFitness + .000001);
-						sumSclFitness += member[i].sclFitness;
+						member.get(i).sclFitness = 1/(member.get(i).rawFitness + .000001);
+						sumSclFitness += member.get(i).sclFitness;
 					}
 					break;
 
@@ -245,7 +249,7 @@ public class Search {
 					//  Copy genetic data to temp array
 					for (int i=0; i<Parameters.popSize; i++){
 						memberIndex[i] = i;
-						memberFitness[i] = member[i].rawFitness;
+						memberFitness[i] = member.get(i).rawFitness;
 					}
 					//  Bubble Sort the array by floating point number
 					for (int i=Parameters.popSize-1; i>0; i--){
@@ -262,8 +266,8 @@ public class Search {
 					}
 					//  Copy ordered array to scale fitness fields
 					for (int i=0; i<Parameters.popSize; i++){
-						member[memberIndex[i]].sclFitness = i;
-						sumSclFitness += member[memberIndex[i]].sclFitness;
+						member.get(memberIndex[i]).sclFitness = i;
+						sumSclFitness += member.get(memberIndex[i]).sclFitness;
 					}
 
 					break;
@@ -273,7 +277,7 @@ public class Search {
 					//  Copy genetic data to temp array
 					for (int i=0; i<Parameters.popSize; i++){
 						memberIndex[i] = i;
-						memberFitness[i] = member[i].rawFitness;
+						memberFitness[i] = member.get(i).rawFitness;
 					}
 					//  Bubble Sort the array by floating point number
 					for (int i=1; i<Parameters.popSize; i++){
@@ -290,8 +294,8 @@ public class Search {
 					}
 					//  Copy array order to scale fitness fields
 					for (int i=0; i<Parameters.popSize; i++){
-						member[memberIndex[i]].sclFitness = i;
-						sumSclFitness += member[memberIndex[i]].sclFitness;
+						member.get(memberIndex[i]).sclFitness = i;
+						sumSclFitness += member.get(memberIndex[i]).sclFitness;
 					}
 
 					break;
@@ -306,8 +310,8 @@ public class Search {
 		// *********************************************************************
 
 				for (int i=0; i<Parameters.popSize; i++){
-					member[i].proFitness = member[i].sclFitness/sumSclFitness;
-					sumProFitness = sumProFitness + member[i].proFitness;
+					member.get(i).proFitness = member.get(i).sclFitness/sumSclFitness;
+					sumProFitness = sumProFitness + member.get(i).proFitness;
 				}
 
 		// *********************************************************************
@@ -316,30 +320,60 @@ public class Search {
 
 				int parent1 = -1;
 				int parent2 = -1;
+				ArrayList<Integer> chosen = new ArrayList<Integer>();
 
 				//  Assumes always two offspring per mating
-				for (int i=0; i<Parameters.popSize; i=i+2){
+				for (int i = 0; i < member.size(); i++){
+					if (!chosen.contains(i))
+					{
+						//	Select Two Parents
+						parent1 = i;
+						chosen.add(parent1);
+						do {
+							parent2 = Chromo.selectParent(chosen);
+						} while (parent2 == parent1);
+						chosen.add(parent2);
 
-					//	Select Two Parents
-					parent1 = Chromo.selectParent();
-					parent2 = parent1;
-					while (parent2 == parent1){
-						parent2 = Chromo.selectParent();
-					}
+						if (Parameters.fecundity > 1)
+						{
+							for (int j = 0; j < Parameters.fecundity; j++)
+							{
+								//	Crossover Two Parents to Create new child
+								child.add(new Chromo());
+								Chromo newChild = child.get(child.size() - 1);
+								newChild.chromo = Chromo.mateParents(member.get(parent1), member.get(parent2));
+								
+								// Not necessary due to constructor
+								// //  Set fitness values back to zero
+								// newChild.rawFitness = -1;   //  Fitness not yet evaluated
+								// newChild.sclFitness = -1;   //  Fitness not yet scaled
+								// newChild.proFitness = -1;   //  Fitness not yet proportionalized
 
-					//	Crossover Two Parents to Create Two Children
-					randnum = r.nextDouble();
-					if (randnum < Parameters.xoverRate){
-						// Chromo.mateParents(parent1, parent2, member[parent1], member[parent2], child[i], child[i+1]);
-                        
-                        // Add children to phylo (move/modify this block as you see fit when crossover is implemented)
-                        phylo.add(child[i]);
-                        phylo.add(child[i+2]);
-					}
-					else {
-						Chromo.mateParents(parent1, member[parent1], child[i]);
-						Chromo.mateParents(parent2, member[parent2], child[i+1]);
-					}
+								// Record child's parents
+								newChild.parents.add(member.get(parent1));
+								newChild.parents.add(member.get(parent2));
+
+								// Add child to phylogenetic tree
+								phylo.add(newChild);
+							}
+						}
+						else
+						{
+							//	Crossover Two Parents to Create new child
+							child.add(new Chromo());
+							Chromo newChild = child.get(child.size() - 1);
+							newChild.chromo = Chromo.mateParents(member.get(parent1), member.get(parent2));
+							
+							// Not necessary due to constructor
+							// //  Set fitness values back to zero
+							// newChild.rawFitness = -1;   //  Fitness not yet evaluated
+							// newChild.sclFitness = -1;   //  Fitness not yet scaled
+							// newChild.proFitness = -1;   //  Fitness not yet proportionalized
+
+							// Add child to phylo
+							phylo.add(newChild);
+						}
+					}					
 				} // End Crossover
 
 				//	Mutate Children
@@ -347,10 +381,12 @@ public class Search {
 					// child[i].doMutation();
 				}
 
-				//	Swap Children with Last Generation
-				for (int i=0; i<Parameters.popSize; i++){
-					Chromo.copyB2A(member[i], child[i]);
+				//	ADD Children to Last Generation
+				for (int i = 0; i < child.size(); i++){
+					member.add(child.get(i));
 				}
+				// Clear children
+				child.clear();
 
 			} //  Repeat the above loop for each generation
 
