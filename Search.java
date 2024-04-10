@@ -327,7 +327,7 @@ public class Search {
 					//	Crossover Two Parents to Create Two Children
 					randnum = r.nextDouble();
 					if (randnum < Parameters.xoverRate){
-						Chromo.mateParents(parent1, parent2, member[parent1], member[parent2], child[i], child[i+1]);
+						// Chromo.mateParents(parent1, parent2, member[parent1], member[parent2], child[i], child[i+1]);
 					}
 					else {
 						Chromo.mateParents(parent1, member[parent1], child[i]);
@@ -337,7 +337,7 @@ public class Search {
 
 				//	Mutate Children
 				for (int i=0; i<Parameters.popSize; i++){
-					child[i].doMutation();
+					// child[i].doMutation();
 				}
 
 				//	Swap Children with Last Generation
