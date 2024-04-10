@@ -3,9 +3,9 @@
 *  Version 2, January 18, 2004
 *******************************************************************************/
 
-import java.io.*;
-import java.util.*;
-import java.text.*;
+// import java.io.*;
+// import java.util.*;
+// import java.text.*;
 
 public class Chromo
 {
@@ -13,50 +13,17 @@ public class Chromo
 *                            STATIC VARIABLES                                  *
 *******************************************************************************/
 
-	public static int[][] genome;
-	
-	static {
-    	    String filename = "AdaptiCritters_Template_numGenes_" + SimulationGenerator.numGenes
-    	            + "_numEvents_" + SimulationGenerator.numEvents
-    	            + "_numGenerations_" + SimulationGenerator.numGens
-    	            + "lethalChance_" + SimulationGenerator.lethalChance + ".txt";
-
-    	    try {
-    	        File template = new File(filename);
-    	        Scanner scanner = new Scanner(template);
-	
-    	        int numGenes = scanner.nextInt();
-    	        genome = new int[numGenes][];
-	
-    	        for (int i = 0; i < numGenes; i++) {
-    	            int numAlleles = scanner.nextInt();
-    	            genome[i] = new int[numAlleles];
-    	            
-    	            for (int j = 0; j < numAlleles; j++) {
-    	                if (scanner.hasNextInt()) {
-    	                    genome[i][j] = scanner.nextInt();
-    	                } else if (scanner.hasNext()) {
-    	                    String allele = scanner.next();
-    	                    genome[i][j] = allele.equals("x") ? Integer.MIN_VALUE : Integer.parseInt(allele);
-    	                }
-    	            }
-    	        }
-    	        scanner.close();
-	
-    	    } catch (FileNotFoundException e) {
-    	        System.out.println(filename + " does not exist");
-    	        e.printStackTrace();
-    	    }
-    	}
+	public static int cumPop = 0; // Cumulative population
 
 /*******************************************************************************
 *                            INSTANCE VARIABLES                                *
 *******************************************************************************/
 
-	public String chromo;
+	public int[] chromo;
 	public double rawFitness;
 	public double sclFitness;
 	public double proFitness;
+	public int id; // Tracks individual by ID# for phylogeny
 
 /*******************************************************************************
 *                            INSTANCE VARIABLES                                *
@@ -69,18 +36,14 @@ public class Chromo
 *******************************************************************************/
 
 	public Chromo(){
-		//  Set gene values to a randum sequence of 1's and 0's
-		char geneBit;
-		chromo = "";
-		for (int i=0; i<Parameters.numGenes; i++){
-			for (int j=0; j<Parameters.geneSize; j++){
-				randnum = Search.r.nextDouble();
-				if (randnum > 0.5) geneBit = '0';
-				else geneBit = '1';
-				this.chromo = chromo + geneBit;
-			}
+		//  Set gene values to a randum allele in binary, based on available alleles of each gene
+		chromo = new int[AdaptiCritters.genome.length];
+		for (int i = 0; i < AdaptiCritters.genome.length; i++){
+			int allele = Search.r.nextInt(AdaptiCritters.genome[i].length);
+				this.chromo[i] = allele;
 		}
 
+		this.id = cumPop++; // ID = current cumPop then increments cumPop by 1
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled
 		this.proFitness = -1;   //  Fitness not yet proportionalized
@@ -94,72 +57,48 @@ public class Chromo
 	//  Get Alpha Represenation of a Gene **************************************
 
 	public String getGeneAlpha(int geneID){
-		int start = geneID * Parameters.geneSize;
-		int end = (geneID+1) * Parameters.geneSize;
-		String geneAlpha = this.chromo.substring(start, end);
-		return (geneAlpha);
+		return (Integer.toString(this.chromo[geneID]));
 	}
 
 	//  Get Integer Value of a Gene (Positive or Negative, 2's Compliment) ****
 
 	public int getIntGeneValue(int geneID){
-		String geneAlpha = "";
-		int geneValue;
-		char geneSign;
-		char geneBit;
-		geneValue = 0;
-		geneAlpha = getGeneAlpha(geneID);
-		for (int i=Parameters.geneSize-1; i>=1; i--){
-			geneBit = geneAlpha.charAt(i);
-			if (geneBit == '1') geneValue = geneValue + (int) Math.pow(2.0, Parameters.geneSize-i-1);
-		}
-		geneSign = geneAlpha.charAt(0);
-		if (geneSign == '1') geneValue = geneValue - (int)Math.pow(2.0, Parameters.geneSize-1);
-		return (geneValue);
+		return (this.chromo[geneID]);
 	}
 
-	//  Get Integer Value of a Gene (Positive only) ****************************
+	// //  Get Integer Value of a Gene (Positive only) ****************************
 
-	public int getPosIntGeneValue(int geneID){
-		String geneAlpha = "";
-		int geneValue;
-		char geneBit;
-		geneValue = 0;
-		geneAlpha = getGeneAlpha(geneID);
-		for (int i=Parameters.geneSize-1; i>=0; i--){
-			geneBit = geneAlpha.charAt(i);
-			if (geneBit == '1') geneValue = geneValue + (int) Math.pow(2.0, Parameters.geneSize-i-1);
-		}
-		return (geneValue);
-	}
+	// public int getPosIntGeneValue(int geneID){
+	// 	return (this.chromo[geneID]);
+	// }
 
 	//  Mutate a Chromosome Based on Mutation Type *****************************
 
-	public void doMutation(){
+	// public void doMutation(){
 
-		String mutChromo = "";
-		char x;
+	// 	String mutChromo = "";
+	// 	char x;
 
-		switch (Parameters.mutationType){
+	// 	switch (Parameters.mutationType){
 
-		case 1:     //  Replace with new random number
+	// 	case 1:     //  Replace with new random number
 
-			for (int j=0; j<(Parameters.geneSize * Parameters.numGenes); j++){
-				x = this.chromo.charAt(j);
-				randnum = Search.r.nextDouble();
-				if (randnum < Parameters.mutationRate){
-					if (x == '1') x = '0';
-					else x = '1';
-				}
-				mutChromo = mutChromo + x;
-			}
-			this.chromo = mutChromo;
-			break;
+	// 		for (int j=0; j<(Parameters.geneSize * Parameters.numGenes); j++){
+	// 			x = this.chromo.charAt(j);
+	// 			randnum = Search.r.nextDouble();
+	// 			if (randnum < Parameters.mutationRate){
+	// 				if (x == '1') x = '0';
+	// 				else x = '1';
+	// 			}
+	// 			mutChromo = mutChromo + x;
+	// 		}
+	// 		this.chromo = mutChromo;
+	// 		break;
 
-		default:
-			System.out.println("ERROR - No mutation method selected");
-		}
-	}
+	// 	default:
+	// 		System.out.println("ERROR - No mutation method selected");
+	// 	}
+	// }
 
 /*******************************************************************************
 *                             STATIC METHODS                                   *
@@ -198,39 +137,39 @@ public class Chromo
 
 	//  Produce a new child from two parents  **********************************
 
-	public static void mateParents(int pnum1, int pnum2, Chromo parent1, Chromo parent2, Chromo child1, Chromo child2){
+	// public static void mateParents(int pnum1, int pnum2, Chromo parent1, Chromo parent2, Chromo child1, Chromo child2){
 
-		int xoverPoint1;
-		int xoverPoint2;
+	// 	int xoverPoint1;
+	// 	int xoverPoint2;
 
-		switch (Parameters.xoverType){
+	// 	switch (Parameters.xoverType){
 
-		case 1:     //  Single Point Crossover
+	// 	case 1:     //  Single Point Crossover
 
-			//  Select crossover point
-			xoverPoint1 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize-1));
+	// 		//  Select crossover point
+	// 		xoverPoint1 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize-1));
 
-			//  Create child chromosome from parental material
-			child1.chromo = parent1.chromo.substring(0,xoverPoint1) + parent2.chromo.substring(xoverPoint1);
-			child2.chromo = parent2.chromo.substring(0,xoverPoint1) + parent1.chromo.substring(xoverPoint1);
-			break;
+	// 		//  Create child chromosome from parental material
+	// 		child1.chromo = parent1.chromo.substring(0,xoverPoint1) + parent2.chromo.substring(xoverPoint1);
+	// 		child2.chromo = parent2.chromo.substring(0,xoverPoint1) + parent1.chromo.substring(xoverPoint1);
+	// 		break;
 
-		case 2:     //  Two Point Crossover
+	// 	case 2:     //  Two Point Crossover
 
-		case 3:     //  Uniform Crossover
+	// 	case 3:     //  Uniform Crossover
 
-		default:
-			System.out.println("ERROR - Bad crossover method selected");
-		}
+	// 	default:
+	// 		System.out.println("ERROR - Bad crossover method selected");
+	// 	}
 
-		//  Set fitness values back to zero
-		child1.rawFitness = -1;   //  Fitness not yet evaluated
-		child1.sclFitness = -1;   //  Fitness not yet scaled
-		child1.proFitness = -1;   //  Fitness not yet proportionalized
-		child2.rawFitness = -1;   //  Fitness not yet evaluated
-		child2.sclFitness = -1;   //  Fitness not yet scaled
-		child2.proFitness = -1;   //  Fitness not yet proportionalized
-	}
+	// 	//  Set fitness values back to zero
+	// 	child1.rawFitness = -1;   //  Fitness not yet evaluated
+	// 	child1.sclFitness = -1;   //  Fitness not yet scaled
+	// 	child1.proFitness = -1;   //  Fitness not yet proportionalized
+	// 	child2.rawFitness = -1;   //  Fitness not yet evaluated
+	// 	child2.sclFitness = -1;   //  Fitness not yet scaled
+	// 	child2.proFitness = -1;   //  Fitness not yet proportionalized
+	// }
 
 	//  Produce a new child from a single parent  ******************************
 
