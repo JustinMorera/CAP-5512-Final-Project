@@ -26,6 +26,9 @@ public class Chromo
 	public double sclFitness;
 	public double proFitness;
 	public int id; // Tracks individual by ID# for phylogeny
+    public List<Chromo> parents;
+    public int startGen;
+    public int endGen;
 
 /*******************************************************************************
 *                            INSTANCE VARIABLES                                *
@@ -45,6 +48,7 @@ public class Chromo
 				this.chromo[i] = allele;
 		}
 
+        this.parents = new ArrayList<Chromo>();
 		this.id = cumPop++; // ID = current cumPop then increments cumPop by 1
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled
@@ -129,10 +133,17 @@ public class Chromo
 			//  Select crossover point
 			// xoverPoint1 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize-1));
 
-			// //  Create child chromosome from parental material
-			// child1.chromo = parent1.chromo.substring(0,xoverPoint1) + parent2.chromo.substring(xoverPoint1);
-			// child2.chromo = parent2.chromo.substring(0,xoverPoint1) + parent1.chromo.substring(xoverPoint1);
-			break;
+	// 		//  Create child chromosome from parental material
+	// 		child1.chromo = parent1.chromo.substring(0,xoverPoint1) + parent2.chromo.substring(xoverPoint1);
+	// 		child2.chromo = parent2.chromo.substring(0,xoverPoint1) + parent1.chromo.substring(xoverPoint1);
+            
+            // // Associate parents to children (move/modify this block as you see fit when crossover is implemented);
+            // child1.parents.add(parent1);
+            // child1.parents.add(parent2);
+            // child2.parents.add(parent1);
+            // child2.parents.add(parent2);
+
+	// 		break;
 
 		case 2:     //  Two Point Crossover
 

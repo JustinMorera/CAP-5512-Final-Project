@@ -127,10 +127,14 @@ public class Search {
 			bestOfRunChromo.rawFitness = defaultBest;
 			System.out.println();
 
+            // Holds history of all individuals and their parent-child relationships
+            List<Chromo> phylo = new ArrayList<Chromo>();
+
 			//	Initialize First Generation
 			for (int i = 0; i < member.size(); i++){
 				member.add(new Chromo());
-				// child[i] = new Chromo();
+				phylo.add(member.get(member.size() - 1));
+				child[i] = new Chromo();
 			}
 
 			//	Begin Each Run
@@ -340,6 +344,9 @@ public class Search {
 								newChild.rawFitness = -1;   //  Fitness not yet evaluated
 								newChild.sclFitness = -1;   //  Fitness not yet scaled
 								newChild.proFitness = -1;   //  Fitness not yet proportionalized
+
+								// Add child to phylo
+								phylo.add(newChild);
 							}
 						}
 						else
@@ -353,6 +360,9 @@ public class Search {
 							newChild.rawFitness = -1;   //  Fitness not yet evaluated
 							newChild.sclFitness = -1;   //  Fitness not yet scaled
 							newChild.proFitness = -1;   //  Fitness not yet proportionalized
+
+							// Add child to phylo
+							phylo.add(newChild);
 						}
 					}					
 				} // End Crossover
