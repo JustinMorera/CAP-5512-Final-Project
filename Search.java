@@ -109,6 +109,7 @@ public class Search {
 		bestOfGenChromo = new Chromo();
 		bestOfRunChromo = new Chromo();
 		bestOverAllChromo = new Chromo();
+        HashMap<Integer, Integer> phylo = new HashMap<Integer, Integer>();
 
 		if (Parameters.minORmax.equals("max")){
 			defaultBest = 0;
@@ -328,6 +329,8 @@ public class Search {
 					randnum = r.nextDouble();
 					if (randnum < Parameters.xoverRate){
 						Chromo.mateParents(parent1, parent2, member[parent1], member[parent2], child[i], child[i+1]);
+                        phylo.put(child[i].id, new int[]{member[parent1].id, member[parent2].id});
+                        phylo.put(child[i+1].id, new int[]{member[parent1].id, member[parent2].id});
 					}
 					else {
 						Chromo.mateParents(parent1, member[parent1], child[i]);
