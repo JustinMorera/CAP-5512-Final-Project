@@ -56,14 +56,8 @@ public class AdaptiCritters extends FitnessFunction{
 
 	public AdaptiCritters () throws java.io.IOException {
 
-		name = "Number Match Problem";
+		name = "AdaptiCritters Simulation";
 
-		//	Create Table of X values from input file
-		BufferedReader input = new BufferedReader(new FileReader (Parameters.dataInputFileName));
-		for (int i=0; i<Parameters.numGenes; i++){
-			testValue[i] = Integer.parseInt(input.readLine().trim());
-		}
-		input.close();
 	}
 
 /*******************************************************************************

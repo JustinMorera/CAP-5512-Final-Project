@@ -157,6 +157,7 @@ public class Chromo
 				double parentChoice = Search.r.nextDouble();
 				phenotype[i] = (parentChoice % 2) == 0 ? parent1.chromo[i] : parent2.chromo[i];
 			}
+			break;
 		default:
 			System.out.println("ERROR - Bad crossover method selected");
 		}

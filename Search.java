@@ -78,7 +78,10 @@ public class Search {
 		Parameters parmValues = new Parameters(args[0]);
 
 	//  Write Parameters To Summary Output File
-		String summaryFileName = Parameters.expID + "_" + dateAndTime + "_" + startTime + "_summary.txt";
+		String timeString = startTime.toString().replace(' ', '_').replace(':', '-');
+		System.out.println(timeString);
+		String summaryFileName = Parameters.expID + "_" + timeString + "_summary.txt";
+		System.out.println("This is the filename:\n" + summaryFileName + "\n end of file name");
 		FileWriter summaryOutput = new FileWriter(summaryFileName);
 		parmValues.outputParameters(summaryOutput);
 

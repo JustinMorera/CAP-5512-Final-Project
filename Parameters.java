@@ -74,7 +74,8 @@ public class Parameters
 		parmInput.close();
 		parmInput = new BufferedReader(new FileReader(dataInputFileName));
 
-		numGenes = Integer.parseInt(parmInput.readLine().substring(30).trim());
+		numGenes = Integer.parseInt(parmInput.readLine().trim());
+
 		// geneSize = Integer.parseInt(parmInput.readLine().substring(30).trim());
 
 		parmInput.close();
