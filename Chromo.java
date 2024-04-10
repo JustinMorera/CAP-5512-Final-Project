@@ -14,6 +14,8 @@ public class Chromo
 *******************************************************************************/
 
 	public static int[][] genome;
+    public static int id;
+    public static int pid1, pid2;
 	
 	static {
     	    String filename = "AdaptiCritters_Template_numGenes_" + SimulationGenerator.numGenes
