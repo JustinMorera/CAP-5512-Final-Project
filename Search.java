@@ -127,10 +127,13 @@ public class Search {
 			bestOfRunChromo.rawFitness = defaultBest;
 			System.out.println();
 
+            // Holds history of all individuals and their parent-child relationships
+            List<Chromo> phylo = new ArrayList<Chromo>();
+
 			//	Initialize First Generation
 			for (int i=0; i<Parameters.popSize; i++){
-				member[i] = new Chromo();
-				child[i] = new Chromo();
+				phylo.add(member[i] = new Chromo());
+				// phylo.add(child[i] = new Chromo());
 			}
 
 			//	Begin Each Run
@@ -328,6 +331,10 @@ public class Search {
 					randnum = r.nextDouble();
 					if (randnum < Parameters.xoverRate){
 						// Chromo.mateParents(parent1, parent2, member[parent1], member[parent2], child[i], child[i+1]);
+                        
+                        // Add children to phylo (move/modify this block as you see fit when crossover is implemented)
+                        phylo.add(child[i]);
+                        phylo.add(child[i+2]);
 					}
 					else {
 						Chromo.mateParents(parent1, member[parent1], child[i]);
