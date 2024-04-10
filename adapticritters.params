@@ -11,6 +11,7 @@ Crossover Rate (4)           :1.0
 Mutation Type (5)            :1
 Mutation Rate (6)            :.01
 Random Number Seed           :75982
+Fecundity: (9)               :2
 
 Notes:
 
@@ -37,3 +38,5 @@ Notes:
 
 8)	Determines number of bits in each gene.  Number of Genes times Size
 	gives the number of bits in each chromosome.
+
+9)  Number of offspring per mating event (each offspring undergoes separate crossover)

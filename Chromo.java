@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /******************************************************************************
 *  A Teaching GA					  Developed by Hal Stringer & Annie Wu, UCF
 *  Version 2, January 18, 2004
@@ -66,12 +68,6 @@ public class Chromo
 		return (this.chromo[geneID]);
 	}
 
-	// //  Get Integer Value of a Gene (Positive only) ****************************
-
-	// public int getPosIntGeneValue(int geneID){
-	// 	return (this.chromo[geneID]);
-	// }
-
 	//  Mutate a Chromosome Based on Mutation Type *****************************
 
 	// public void doMutation(){
@@ -106,70 +102,51 @@ public class Chromo
 
 	//  Select a parent for crossover ******************************************
 
-	public static int selectParent(){
+	public static int selectParent(ArrayList<Integer> chosen){
 
-		double rWheel = 0;
-		int j = 0;
-		int k = 0;
+		// Random Selection
+		randnum = Search.r.nextDouble();
+		int parentIndex = -1;
+		do {
+			parentIndex = (int) (randnum * Search.member.size());
+		} while (chosen.contains(parentIndex));
 
-		switch (Parameters.selectType){
-
-		case 1:     // Proportional Selection
-			randnum = Search.r.nextDouble();
-			for (j=0; j<Parameters.popSize; j++){
-				rWheel = rWheel + Search.member[j].proFitness;
-				if (randnum < rWheel) return(j);
-			}
-			break;
-
-		case 3:     // Random Selection
-			randnum = Search.r.nextDouble();
-			j = (int) (randnum * Parameters.popSize);
-			return(j);
-
-		case 2:     //  Tournament Selection
-
-		default:
-			System.out.println("ERROR - No selection method selected");
-		}
-	return(-1);
+		return(parentIndex);
 	}
 
 	//  Produce a new child from two parents  **********************************
 
-	// public static void mateParents(int pnum1, int pnum2, Chromo parent1, Chromo parent2, Chromo child1, Chromo child2){
+	public static int[] mateParents(Chromo parent1, Chromo parent2){
 
-	// 	int xoverPoint1;
-	// 	int xoverPoint2;
+		// int xoverPoint1;
+		// int xoverPoint2;
+		int[] phenotype = new int[AdaptiCritters.genome.length];
 
-	// 	switch (Parameters.xoverType){
+		switch (Parameters.xoverType){
 
-	// 	case 1:     //  Single Point Crossover
+		case 1:     //  Single Point Crossover
 
-	// 		//  Select crossover point
-	// 		xoverPoint1 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize-1));
+			//  Select crossover point
+			// xoverPoint1 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize-1));
 
-	// 		//  Create child chromosome from parental material
-	// 		child1.chromo = parent1.chromo.substring(0,xoverPoint1) + parent2.chromo.substring(xoverPoint1);
-	// 		child2.chromo = parent2.chromo.substring(0,xoverPoint1) + parent1.chromo.substring(xoverPoint1);
-	// 		break;
+			// //  Create child chromosome from parental material
+			// child1.chromo = parent1.chromo.substring(0,xoverPoint1) + parent2.chromo.substring(xoverPoint1);
+			// child2.chromo = parent2.chromo.substring(0,xoverPoint1) + parent1.chromo.substring(xoverPoint1);
+			break;
 
-	// 	case 2:     //  Two Point Crossover
+		case 2:     //  Two Point Crossover
 
-	// 	case 3:     //  Uniform Crossover
-
-	// 	default:
-	// 		System.out.println("ERROR - Bad crossover method selected");
-	// 	}
-
-	// 	//  Set fitness values back to zero
-	// 	child1.rawFitness = -1;   //  Fitness not yet evaluated
-	// 	child1.sclFitness = -1;   //  Fitness not yet scaled
-	// 	child1.proFitness = -1;   //  Fitness not yet proportionalized
-	// 	child2.rawFitness = -1;   //  Fitness not yet evaluated
-	// 	child2.sclFitness = -1;   //  Fitness not yet scaled
-	// 	child2.proFitness = -1;   //  Fitness not yet proportionalized
-	// }
+		case 3:     //  Uniform Crossover
+			for (int i = 0; i < AdaptiCritters.genome.length; i++)
+			{
+				double parentChoice = Search.r.nextDouble();
+				phenotype[i] = (parentChoice % 2) == 0 ? parent1.chromo[i] : parent2.chromo[i];
+			}
+		default:
+			System.out.println("ERROR - Bad crossover method selected");
+		}
+		return phenotype;
+	}
 
 	//  Produce a new child from a single parent  ******************************
 

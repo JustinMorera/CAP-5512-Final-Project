@@ -4,8 +4,8 @@
 *******************************************************************************/
 
 import java.io.*;
-import java.util.*;
-import java.text.*;
+// import java.util.*;
+// import java.text.*;
 
 public class Parameters
 {
@@ -36,6 +36,9 @@ public class Parameters
 	public static double mutationRate;
 
 	public static long seed;
+	public static int fecundity;
+
+	// From Input File
 	public static int numGenes;
 	// public static int geneSize;
 
@@ -66,6 +69,7 @@ public class Parameters
 		mutationRate = Double.parseDouble(parmInput.readLine().substring(30).trim());
 
 		seed = Long.parseLong(parmInput.readLine().substring(30).trim());
+		fecundity = Integer.parseInt(parmInput.readLine().substring(30).trim());
 
 		parmInput.close();
 		parmInput = new BufferedReader(new FileReader(dataInputFileName));
