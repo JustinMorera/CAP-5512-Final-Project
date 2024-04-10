@@ -14,6 +14,7 @@ public class Chromo
 *******************************************************************************/
 
 	public static int[][] genome;
+	public static int cumPop = 0;
 	
 	static {
     	    try {
@@ -52,6 +53,7 @@ public class Chromo
 	public double rawFitness;
 	public double sclFitness;
 	public double proFitness;
+	public int id;
 
 /*******************************************************************************
 *                            INSTANCE VARIABLES                                *
@@ -71,6 +73,7 @@ public class Chromo
 				this.chromo[i] = allele;
 		}
 
+		this.id = cumPop++;
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled
 		this.proFitness = -1;   //  Fitness not yet proportionalized
