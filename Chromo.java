@@ -3,9 +3,9 @@
 *  Version 2, January 18, 2004
 *******************************************************************************/
 
-import java.io.*;
-import java.util.*;
-import java.text.*;
+// import java.io.*;
+// import java.util.*;
+// import java.text.*;
 
 public class Chromo
 {
@@ -13,37 +13,7 @@ public class Chromo
 *                            STATIC VARIABLES                                  *
 *******************************************************************************/
 
-	public static int[][] genome;
-	public static int cumPop = 0;
-	
-	static {
-    	    try {
-    	        File template = new File(Parameters.dataInputFileName);
-    	        Scanner scanner = new Scanner(template);
-	
-    	        int numGenes = scanner.nextInt();
-    	        genome = new int[numGenes][];
-	
-    	        for (int i = 0; i < numGenes; i++) {
-    	            int numAlleles = scanner.nextInt();
-    	            genome[i] = new int[numAlleles];
-    	            
-    	            for (int j = 0; j < numAlleles; j++) {
-    	                if (scanner.hasNextInt()) {
-    	                    genome[i][j] = scanner.nextInt();
-    	                } else if (scanner.hasNext()) {
-    	                    String allele = scanner.next();
-    	                    genome[i][j] = allele.equals("x") ? Integer.MIN_VALUE : Integer.parseInt(allele);
-    	                }
-    	            }
-    	        }
-    	        scanner.close();
-	
-    	    } catch (FileNotFoundException e) {
-    	        System.out.println(Parameters.dataInputFileName + " does not exist");
-    	        e.printStackTrace();
-    	    }
-    	}
+	public static int cumPop = 0; // Cumulative population
 
 /*******************************************************************************
 *                            INSTANCE VARIABLES                                *
@@ -53,7 +23,7 @@ public class Chromo
 	public double rawFitness;
 	public double sclFitness;
 	public double proFitness;
-	public int id;
+	public int id; // Tracks individual by ID# for phylogeny
 
 /*******************************************************************************
 *                            INSTANCE VARIABLES                                *
@@ -67,13 +37,13 @@ public class Chromo
 
 	public Chromo(){
 		//  Set gene values to a randum allele in binary, based on available alleles of each gene
-		chromo = new int[genome.length];
-		for (int i = 0; i < genome.length; i++){
-			int allele = Search.r.nextInt(genome[i].length);
+		chromo = new int[AdaptiCritters.genome.length];
+		for (int i = 0; i < AdaptiCritters.genome.length; i++){
+			int allele = Search.r.nextInt(AdaptiCritters.genome[i].length);
 				this.chromo[i] = allele;
 		}
 
-		this.id = cumPop++;
+		this.id = cumPop++; // ID = current cumPop then increments cumPop by 1
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled
 		this.proFitness = -1;   //  Fitness not yet proportionalized

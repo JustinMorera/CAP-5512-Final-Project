@@ -5,7 +5,7 @@
 
 import java.io.*;
 import java.util.*;
-import java.text.*;
+// import java.text.*;
 
 public class AdaptiCritters extends FitnessFunction{
 
@@ -20,7 +20,36 @@ public class AdaptiCritters extends FitnessFunction{
 
 	//  Assumes no more than 100 values in the data file
 	public static int[] testValue = new int[100];
+	public static int[][] genome; // Whole genome for entire scenario
 
+	static { // Fill genome array with genes and their alleles
+		try {
+			File template = new File(Parameters.dataInputFileName);
+			Scanner scanner = new Scanner(template);
+
+			int numGenes = scanner.nextInt();
+			genome = new int[numGenes][];
+
+			for (int i = 0; i < numGenes; i++) {
+				int numAlleles = scanner.nextInt();
+				genome[i] = new int[numAlleles];
+				
+				for (int j = 0; j < numAlleles; j++) {
+					if (scanner.hasNextInt()) {
+						genome[i][j] = scanner.nextInt();
+					} else if (scanner.hasNext()) {
+						String allele = scanner.next();
+						genome[i][j] = allele.equals("x") ? Integer.MIN_VALUE : Integer.parseInt(allele);
+					}
+				}
+			}
+			scanner.close();
+
+		} catch (FileNotFoundException e) {
+			System.out.println(Parameters.dataInputFileName + " does not exist");
+			e.printStackTrace();
+		}
+	}
 /*******************************************************************************
 *                              CONSTRUCTORS                                    *
 *******************************************************************************/
