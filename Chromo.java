@@ -77,31 +77,19 @@ public class Chromo
 
 	//  Mutate a Chromosome Based on Mutation Type *****************************
 
-	// public void doMutation(){
-
-	// 	String mutChromo = "";
-	// 	char x;
-
-	// 	switch (Parameters.mutationType){
-
-	// 	case 1:     //  Replace with new random number
-
-	// 		for (int j=0; j<(Parameters.geneSize * Parameters.numGenes); j++){
-	// 			x = this.chromo.charAt(j);
-	// 			randnum = Search.r.nextDouble();
-	// 			if (randnum < Parameters.mutationRate){
-	// 				if (x == '1') x = '0';
-	// 				else x = '1';
-	// 			}
-	// 			mutChromo = mutChromo + x;
-	// 		}
-	// 		this.chromo = mutChromo;
-	// 		break;
-
-	// 	default:
-	// 		System.out.println("ERROR - No mutation method selected");
-	// 	}
-	// }
+	public void doMutation(){
+	  switch (Parameters.mutationType){
+	    case 1:     //  Replace with new random number
+	 		for (int i = 0; i < this.chromo.length; i++) {
+        		if (Search.r.nextDouble() < Parameters.mutationRate) {
+            		int newAllele = Search.r.nextInt(AdaptiCritters.genome[i].length);
+            		this.chromo[i] = newAllele;
+        		}
+    		}
+	 	default:
+ 		  System.out.println("ERROR - No mutation method selected");
+	 	}
+	 }
 
 /*******************************************************************************
 *                             STATIC METHODS                                   *
