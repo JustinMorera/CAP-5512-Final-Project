@@ -67,12 +67,19 @@ public class AdaptiCritters extends FitnessFunction{
 //  COMPUTE A CHROMOSOME'S RAW FITNESS *************************************
 
 	public void doRawFitness(Chromo X){
+		X.rawFitness = 0;
 
-		double difference = 0;
-		for (int j=0; j<Parameters.numGenes; j++){
-			difference = (double) Math.abs(X.getIntGeneValue(j) - testValue[j]);
-			X.rawFitness = X.rawFitness + difference;
-		}
+    	for (int i = 0; i < X.chromo.length; i++) {
+        	int geneIndex = X.chromo[i];
+        	
+			if (geneIndex >= 0 && geneIndex < genome.length) {
+				for(int j = 0; j < genome[geneIndex].length; j++){
+					X.rawFitness += genome[geneIndex][j];
+				}
+			else{
+				System.out.println("Invalid geneIndex in passed chromosome id: " + X.id + "    gene: " + i);
+			}
+    	}
 	}
 
 //  PRINT OUT AN INDIVIDUAL GENE TO THE SUMMARY FILE *********************************
