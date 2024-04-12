@@ -76,6 +76,7 @@ public class AdaptiCritters extends FitnessFunction{
 				for(int j = 0; j < genome[geneIndex].length; j++){
 					X.rawFitness += genome[geneIndex][j];
 				}
+			}
 			else{
 				System.out.println("Invalid geneIndex in passed chromosome id: " + X.id + "    gene: " + i);
 			}
