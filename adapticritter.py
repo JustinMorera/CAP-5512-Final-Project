@@ -16,6 +16,9 @@ def create_sample_csv():
     df.to_csv('fitness_data.csv', index=False)
     
 def plot_graph(frame):
+    for widget in frame.winfo_children():
+        widget.destroy()
+        
     df = pd.read_csv('fitness_data.csv')
 
     fig, ax = plt.subplots()
