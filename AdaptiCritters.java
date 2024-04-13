@@ -70,15 +70,15 @@ public class AdaptiCritters extends FitnessFunction{
 		X.rawFitness = 0;
 
     	for (int i = 0; i < X.chromo.length; i++) {
-        	int geneIndex = X.chromo[i];
-        	
-			if (geneIndex >= 0 && geneIndex < genome.length) {
-				for(int j = 0; j < genome[geneIndex].length; j++){
-					X.rawFitness += genome[geneIndex][j];
+        	int allele = X.chromo[i];
+        	if (allele > Integer.MIN_VALUE)
+				{
+					X.rawFitness += genome[i][allele];
 				}
-			}
-			else{
-				System.out.println("Invalid geneIndex in passed chromosome id: " + X.id + "    gene: " + i);
+			else
+			{
+				X.rawFitness = Integer.MIN_VALUE;
+				break;
 			}
     	}
 	}

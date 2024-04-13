@@ -28,6 +28,7 @@ public class Chromo
 	public double proFitness;
 	public int id; // Tracks individual by ID# for phylogeny
     public ArrayList<Chromo> parents;
+	public ArrayList<Chromo> children;
     public int startGen;
     public int endGen;
 
@@ -50,6 +51,7 @@ public class Chromo
 		}
 
         this.parents = new ArrayList<Chromo>();
+		this.children = new ArrayList<Chromo>();
 		this.startGen = Search.G; // Current generation
 		this.endGen = -1; // Set when fitness drops below 0 or threshold
 		this.id = cumPop++; // ID = current cumPop then increments cumPop by 1
