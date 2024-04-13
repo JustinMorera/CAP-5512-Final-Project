@@ -6,26 +6,22 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-#Placeholder function til java actually generates it
-def create_sample_csv():
-    data = {
-        'Generation': [1, 2, 3, 4, 5],
-        'Fitness': [10, 15, 20, 25, 30]
-    }
-    df = pd.DataFrame(data)
-    df.to_csv('fitness_data.csv', index=False)
-    
+ 
 def plot_graph(frame):
     for widget in frame.winfo_children():
         widget.destroy()
         
-    df = pd.read_csv('fitness_data.csv')
+    df = pd.read_csv('fitnessdata.csv', header=None, names=['Generation', 'Best Fit', 'Average Fit'])
 
     fig, ax = plt.subplots()
-    ax.plot(df['Generation'], df['Fitness'], marker='o')
+    ax.plot(df['Generation'], df['Best Fit'], label='Best Fit', marker='o')
+    ax.plot(df['Generation'], df['Average Fit'], label='Average Fit', marker='o')
+    
     ax.set_xlabel('Generation')
     ax.set_ylabel('Fitness')
-    ax.set_title('Fitness vs. Generations')
+    ax.set_title('Fitness Evolution Over Generations')
+
+    ax.legend()
 
     canvas = FigureCanvasTkAgg(fig, master=frame)
     canvas.draw()
@@ -156,7 +152,6 @@ def main():
     root.title("AdaptiCritters v3.4.7")
     root.geometry("1170x930+0+0")
     root.maxsize(1170, 930)
-    create_sample_csv()
 
     frame_params = ttk.Frame(root, borderwidth=3, cursor="arrow")
     frame_params.place(width=300, height=770, x=850, y=30)
