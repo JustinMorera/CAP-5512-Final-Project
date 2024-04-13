@@ -11,7 +11,7 @@ def plot_graph(frame):
     for widget in frame.winfo_children():
         widget.destroy()
         
-    df = pd.read_csv('fitnessdata.csv', header=None, names=['Generation', 'Best Fit', 'Average Fit'])
+    df = pd.read_csv('fitnessdata.csv', header=None, names=['Generation', 'Average Fit', 'Best Fit'])
 
     fig, ax = plt.subplots()
     ax.plot(df['Generation'], df['Best Fit'], label='Best Fit', marker='o')
