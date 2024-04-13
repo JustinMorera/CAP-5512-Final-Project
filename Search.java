@@ -85,6 +85,8 @@ public class Search {
 		parmValues.outputParameters(summaryOutput);
 
 	// Write to csv
+		File file = new File("fitnessdata.csv");
+        file.delete();
 		PrintWriter csvOutput = new PrintWriter(new FileWriter("fitnessdata.csv", true));
 
 	//	Set up Fitness Statistics matrix
