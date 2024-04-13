@@ -28,6 +28,7 @@ public class Chromo
 	public double proFitness;
 	public int id; // Tracks individual by ID# for phylogeny
     public ArrayList<Chromo> parents;
+	public ArrayList<Chromo> children;
     public int startGen;
     public int endGen;
 
@@ -50,6 +51,7 @@ public class Chromo
 		}
 
         this.parents = new ArrayList<Chromo>();
+		this.children = new ArrayList<Chromo>();
 		this.startGen = Search.G; // Current generation
 		this.endGen = -1; // Set when fitness drops below 0 or threshold
 		this.id = cumPop++; // ID = current cumPop then increments cumPop by 1
@@ -77,31 +79,19 @@ public class Chromo
 
 	//  Mutate a Chromosome Based on Mutation Type *****************************
 
-	// public void doMutation(){
-
-	// 	String mutChromo = "";
-	// 	char x;
-
-	// 	switch (Parameters.mutationType){
-
-	// 	case 1:     //  Replace with new random number
-
-	// 		for (int j=0; j<(Parameters.geneSize * Parameters.numGenes); j++){
-	// 			x = this.chromo.charAt(j);
-	// 			randnum = Search.r.nextDouble();
-	// 			if (randnum < Parameters.mutationRate){
-	// 				if (x == '1') x = '0';
-	// 				else x = '1';
-	// 			}
-	// 			mutChromo = mutChromo + x;
-	// 		}
-	// 		this.chromo = mutChromo;
-	// 		break;
-
-	// 	default:
-	// 		System.out.println("ERROR - No mutation method selected");
-	// 	}
-	// }
+	public void doMutation(){
+	  switch (Parameters.mutationType){
+	    case 1:     //  Replace with new random number
+	 		for (int i = 0; i < this.chromo.length; i++) {
+        		if (Search.r.nextDouble() < Parameters.mutationRate) {
+            		int newGene = Search.r.nextInt(AdaptiCritters.genome.length);
+            		this.chromo[i] = newGene;
+        		}
+    		}
+	 	default:
+ 		  System.out.println("ERROR - No mutation method selected");
+	 	}
+	 }
 
 /*******************************************************************************
 *                             STATIC METHODS                                   *
@@ -112,10 +102,9 @@ public class Chromo
 	public static int selectParent(ArrayList<Integer> chosen){
 
 		// Random Selection
-		randnum = Search.r.nextDouble();
 		int parentIndex = -1;
 		do {
-			parentIndex = (int) (randnum * Search.member.size());
+			parentIndex = (int) (Search.r.nextDouble() * Search.member.size());
 		} while (chosen.contains(parentIndex));
 
 		return(parentIndex);

@@ -81,7 +81,6 @@ public class Search {
 		String timeString = startTime.toString().replace(' ', '_').replace(':', '-');
 		System.out.println(timeString);
 		String summaryFileName = Parameters.expID + "_" + timeString + "_summary.txt";
-		System.out.println("This is the filename:\n" + summaryFileName + "\n end of file name");
 		FileWriter summaryOutput = new FileWriter(summaryFileName);
 		parmValues.outputParameters(summaryOutput);
 
@@ -112,6 +111,7 @@ public class Search {
 		bestOfGenChromo = new Chromo();
 		bestOfRunChromo = new Chromo();
 		bestOverAllChromo = new Chromo();
+		Chromo.cumPop -= 3;
 
 		if (Parameters.minORmax.equals("max")){
 			defaultBest = 0;
@@ -141,7 +141,7 @@ public class Search {
 			}
 
 			//	Begin Each Run
-			for (G=0; G<Parameters.generations; G++){
+			for (G = 0; G < Parameters.generations; G++){
 
 				sumProFitness = 0;
 				sumSclFitness = 0;
@@ -150,7 +150,7 @@ public class Search {
 				bestOfGenChromo.rawFitness = defaultBest;
 
 				//	Test Fitness of Each Member
-				for (int i=0; i<Parameters.popSize; i++){
+				for (int i = 0; i < member.size(); i++){
 
 					member.get(i).rawFitness = 0;
 					member.get(i).sclFitness = 0;
@@ -211,8 +211,19 @@ public class Search {
 							);
 
 				// Output generation statistics to screen
-				System.out.println(R + "\t" + G +  "\t" + (int)bestOfGenChromo.rawFitness + "\t" + averageRawFitness + "\t" + stdevRawFitness);
-
+				// System.out.println("Testing");
+				// System.out.println("Number of individuals: " + member.size());
+				// for (Chromo indiv : member)
+				// {
+				// 	System.out.println(indiv.id + " Phenotype: ");
+				// 	for (int gene : indiv.chromo)
+				// 	{
+				// 		System.out.print(gene + " ");
+				// 	}
+				// 	System.out.println("");
+				// 	System.out.println(" Fitness: " + indiv.rawFitness);
+				// }
+				System.out.println("Run: " + R + "\t" + " Gen: " + G + " Cum Pop Size: " + Chromo.cumPop + " Current Pop: " + member.size() +  "\t" + " Best Fit: " + (int)bestOfGenChromo.rawFitness + "\t" + " Avg Fit: " + averageRawFitness + "\t" + " Std Dev: " + stdevRawFitness);
 				// Output generation statistics to summary file
 				summaryOutput.write(" R ");
 				Hwrite.right(R, 3, summaryOutput);
@@ -238,7 +249,7 @@ public class Search {
 					break;
 
 				case 1:     // Fitness not scaled.  Only inverted.
-					for (int i=0; i<Parameters.popSize; i++){
+					for (int i = 0; i < member.size(); i++){
 						member.get(i).sclFitness = 1/(member.get(i).rawFitness + .000001);
 						sumSclFitness += member.get(i).sclFitness;
 					}
@@ -309,7 +320,7 @@ public class Search {
 		// ****** PROPORTIONALIZE SCALED FITNESS FOR EACH MEMBER AND SUM *******
 		// *********************************************************************
 
-				for (int i=0; i<Parameters.popSize; i++){
+				for (int i = 0; i < member.size(); i++){
 					member.get(i).proFitness = member.get(i).sclFitness/sumSclFitness;
 					sumProFitness = sumProFitness + member.get(i).proFitness;
 				}
@@ -318,21 +329,45 @@ public class Search {
 		// ************ CROSSOVER AND CREATE NEXT GENERATION *******************
 		// *********************************************************************
 
-				int parent1 = -1;
-				int parent2 = -1;
+				Chromo parent1 = null;
+				Chromo parent2 = null;
 				ArrayList<Integer> chosen = new ArrayList<Integer>();
 
-				//  Assumes always two offspring per mating
+				// Remove unfit members from population
+				for (int i = 0; i < member.size(); i++)
+				{
+					Chromo individual = member.get(i);
+					if (individual.rawFitness <= Parameters.fitnessThreshold) {
+						individual.endGen = G;
+						member.remove(i);
+						i--;
+					}
+				}
+				// System.out.println("After death: ");
+				// for (Chromo indiv : member)
+				// {
+				// 	System.out.println(indiv.id + " Phenotype: ");
+				// 	for (int gene : indiv.chromo)
+				// 	{
+				// 		System.out.print(gene + " ");
+				// 	}
+				// 	System.out.println("");
+				// 	System.out.println(" Fitness: " + indiv.rawFitness);
+				// }
 				for (int i = 0; i < member.size(); i++){
+					if ((member.size() % 2 == 1) && (chosen.size() == member.size() - 1))
+						{
+							break;
+						}
 					if (!chosen.contains(i))
 					{
 						//	Select Two Parents
-						parent1 = i;
-						chosen.add(parent1);
+						parent1 = member.get(i);
+						chosen.add(i);
 						do {
-							parent2 = Chromo.selectParent(chosen);
+							parent2 = member.get(Chromo.selectParent(chosen));
 						} while (parent2 == parent1);
-						chosen.add(parent2);
+						chosen.add(member.indexOf(parent2));
 
 						if (Parameters.fecundity > 1)
 						{
@@ -341,7 +376,7 @@ public class Search {
 								//	Crossover Two Parents to Create new child
 								child.add(new Chromo());
 								Chromo newChild = child.get(child.size() - 1);
-								newChild.chromo = Chromo.mateParents(member.get(parent1), member.get(parent2));
+								newChild.chromo = Chromo.mateParents(parent1, parent2);
 								
 								// Not necessary due to constructor
 								// //  Set fitness values back to zero
@@ -350,8 +385,10 @@ public class Search {
 								// newChild.proFitness = -1;   //  Fitness not yet proportionalized
 
 								// Record child's parents
-								newChild.parents.add(member.get(parent1));
-								newChild.parents.add(member.get(parent2));
+								parent1.children.add(newChild);
+								parent2.children.add(newChild);
+								newChild.parents.add(parent1);
+								newChild.parents.add(parent2);
 
 								// Add child to phylogenetic tree
 								phylo.add(newChild);
@@ -362,7 +399,12 @@ public class Search {
 							//	Crossover Two Parents to Create new child
 							child.add(new Chromo());
 							Chromo newChild = child.get(child.size() - 1);
-							newChild.chromo = Chromo.mateParents(member.get(parent1), member.get(parent2));
+							newChild.chromo = Chromo.mateParents(parent1, parent2);
+
+							parent1.children.add(newChild);
+							parent2.children.add(newChild);
+							newChild.parents.add(parent1);
+							newChild.parents.add(parent2);
 							
 							// Not necessary due to constructor
 							// //  Set fitness values back to zero

@@ -37,6 +37,7 @@ public class Parameters
 
 	public static long seed;
 	public static int fecundity;
+	public static int fitnessThreshold;
 
 	// From Input File
 	public static int numGenes;
@@ -70,6 +71,7 @@ public class Parameters
 
 		seed = Long.parseLong(parmInput.readLine().substring(30).trim());
 		fecundity = Integer.parseInt(parmInput.readLine().substring(30).trim());
+		fitnessThreshold = Integer.parseInt(parmInput.readLine().substring(30).trim());
 
 		parmInput.close();
 		parmInput = new BufferedReader(new FileReader(dataInputFileName));
