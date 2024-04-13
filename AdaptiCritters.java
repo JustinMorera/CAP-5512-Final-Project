@@ -81,6 +81,9 @@ public class AdaptiCritters extends FitnessFunction{
 				break;
 			}
     	}
+
+		// Update average fitness of this individual
+		X.avgFitness = ((X.avgFitness * Search.G) + X.rawFitness) / (Search.G + 1);
 	}
 
 //  PRINT OUT AN INDIVIDUAL GENE TO THE SUMMARY FILE *********************************
