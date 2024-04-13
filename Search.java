@@ -45,7 +45,7 @@ public class Search {
 	public static int G;
 	public static int R;
 	public static Random r = new Random();
-	private static double randnum;
+	// private static double randnum;
 
 	private static int memberIndex[];
 	private static double memberFitness[];
