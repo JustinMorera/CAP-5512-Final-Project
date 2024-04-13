@@ -39,7 +39,7 @@ public class AdaptiCritters extends FitnessFunction{
 						genome[i][j] = scanner.nextInt();
 					} else if (scanner.hasNext()) {
 						String allele = scanner.next();
-						genome[i][j] = allele.equals("x") ? Integer.MIN_VALUE : Integer.parseInt(allele);
+						genome[i][j] = allele.equals("x") ? -1000000 : Integer.parseInt(allele);
 					}
 				}
 			}
@@ -71,13 +71,13 @@ public class AdaptiCritters extends FitnessFunction{
 
     	for (int i = 0; i < X.chromo.length; i++) {
         	int allele = X.chromo[i];
-        	if (allele > Integer.MIN_VALUE)
+        	if (allele > -1000000)
 				{
 					X.rawFitness += genome[i][allele];
 				}
 			else
 			{
-				X.rawFitness = Integer.MIN_VALUE;
+				X.rawFitness = -1000000;
 				break;
 			}
     	}

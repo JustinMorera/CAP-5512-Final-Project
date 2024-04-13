@@ -111,6 +111,7 @@ public class Search {
 		bestOfGenChromo = new Chromo();
 		bestOfRunChromo = new Chromo();
 		bestOverAllChromo = new Chromo();
+		Chromo.cumPop -= 3;
 
 		if (Parameters.minORmax.equals("max")){
 			defaultBest = 0;
@@ -149,7 +150,7 @@ public class Search {
 				bestOfGenChromo.rawFitness = defaultBest;
 
 				//	Test Fitness of Each Member
-				for (int i=0; i<Parameters.popSize; i++){
+				for (int i = 0; i < member.size(); i++){
 
 					member.get(i).rawFitness = 0;
 					member.get(i).sclFitness = 0;
@@ -210,8 +211,19 @@ public class Search {
 							);
 
 				// Output generation statistics to screen
-				System.out.println(R + "\t" + G +  "\t" + (int)bestOfGenChromo.rawFitness + "\t" + averageRawFitness + "\t" + stdevRawFitness);
-
+				// System.out.println("Testing");
+				// System.out.println("Number of individuals: " + member.size());
+				// for (Chromo indiv : member)
+				// {
+				// 	System.out.println(indiv.id + " Phenotype: ");
+				// 	for (int gene : indiv.chromo)
+				// 	{
+				// 		System.out.print(gene + " ");
+				// 	}
+				// 	System.out.println("");
+				// 	System.out.println(" Fitness: " + indiv.rawFitness);
+				// }
+				System.out.println("Run: " + R + "\t" + " Gen: " + G + " Cum Pop Size: " + Chromo.cumPop + " Current Pop: " + member.size() +  "\t" + " Best Fit: " + (int)bestOfGenChromo.rawFitness + "\t" + " Avg Fit: " + averageRawFitness + "\t" + " Std Dev: " + stdevRawFitness);
 				// Output generation statistics to summary file
 				summaryOutput.write(" R ");
 				Hwrite.right(R, 3, summaryOutput);
@@ -237,7 +249,7 @@ public class Search {
 					break;
 
 				case 1:     // Fitness not scaled.  Only inverted.
-					for (int i=0; i<Parameters.popSize; i++){
+					for (int i = 0; i < member.size(); i++){
 						member.get(i).sclFitness = 1/(member.get(i).rawFitness + .000001);
 						sumSclFitness += member.get(i).sclFitness;
 					}
@@ -308,7 +320,7 @@ public class Search {
 		// ****** PROPORTIONALIZE SCALED FITNESS FOR EACH MEMBER AND SUM *******
 		// *********************************************************************
 
-				for (int i=0; i<Parameters.popSize; i++){
+				for (int i = 0; i < member.size(); i++){
 					member.get(i).proFitness = member.get(i).sclFitness/sumSclFitness;
 					sumProFitness = sumProFitness + member.get(i).proFitness;
 				}
@@ -328,10 +340,25 @@ public class Search {
 					if (individual.rawFitness <= Parameters.fitnessThreshold) {
 						individual.endGen = G;
 						member.remove(i);
+						i--;
 					}
 				}
-
+				// System.out.println("After death: ");
+				// for (Chromo indiv : member)
+				// {
+				// 	System.out.println(indiv.id + " Phenotype: ");
+				// 	for (int gene : indiv.chromo)
+				// 	{
+				// 		System.out.print(gene + " ");
+				// 	}
+				// 	System.out.println("");
+				// 	System.out.println(" Fitness: " + indiv.rawFitness);
+				// }
 				for (int i = 0; i < member.size(); i++){
+					if ((member.size() % 2 == 1) && (chosen.size() == member.size() - 1))
+						{
+							break;
+						}
 					if (!chosen.contains(i))
 					{
 						//	Select Two Parents

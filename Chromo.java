@@ -102,10 +102,9 @@ public class Chromo
 	public static int selectParent(ArrayList<Integer> chosen){
 
 		// Random Selection
-		randnum = Search.r.nextDouble();
 		int parentIndex = -1;
 		do {
-			parentIndex = (int) (randnum * Search.member.size());
+			parentIndex = (int) (Search.r.nextDouble() * Search.member.size());
 		} while (chosen.contains(parentIndex));
 
 		return(parentIndex);
