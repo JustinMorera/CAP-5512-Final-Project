@@ -1,8 +1,8 @@
 Experiment ID                :adapticritters
 Problem Type                 :AC
-Data Input File Name         :AdaptiCritters_Template_numGenes_5_numEvents_3_numGenerations_100lethalChance_0.15.txt
+Data Input File Name         :indata.AC.txt
 Number of Runs               :1
-Generations per Run          :1000
+Generations per Run          :10
 Population Size              :10
 Selection Method (1)         :1
 Fitness Scaling Type (2)     :1
@@ -12,6 +12,7 @@ Mutation Type (5)            :1
 Mutation Rate (6)            :.01
 Random Number Seed           :75982
 Fecundity: (9)               :2
+Fitness Threshold            :0
 
 Notes:
 

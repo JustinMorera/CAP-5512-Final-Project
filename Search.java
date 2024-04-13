@@ -84,6 +84,11 @@ public class Search {
 		FileWriter summaryOutput = new FileWriter(summaryFileName);
 		parmValues.outputParameters(summaryOutput);
 
+	// Write to csv
+		File file = new File("fitnessdata.csv");
+        file.delete();
+		PrintWriter csvOutput = new PrintWriter(new FileWriter("fitnessdata.csv", true));
+
 	//	Set up Fitness Statistics matrix
 		fitnessStats = new double[2][Parameters.generations];
 		for (int i=0; i<Parameters.generations; i++){
@@ -451,11 +456,16 @@ public class Search {
 			Hwrite.left(i, 15, summaryOutput);
 			Hwrite.left(fitnessStats[0][i]/Parameters.numRuns, 20, 2, summaryOutput);
 			Hwrite.left(fitnessStats[1][i]/Parameters.numRuns, 20, 2, summaryOutput);
+			csvOutput.printf("%d,%.5f,%.5f\n", i, fitnessStats[0][i]/Parameters.numRuns,fitnessStats[1][i]/Parameters.numRuns);
+			csvOutput.flush();
 			summaryOutput.write("\n");
 		}
 
 		summaryOutput.write("\n");
 		summaryOutput.close();
+
+		csvOutput.write("\n");
+		csvOutput.close();
 
 		System.out.println();
 		System.out.println("Start:  " + startTime);

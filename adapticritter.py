@@ -6,26 +6,22 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-#Placeholder function til java actually generates it
-def create_sample_csv():
-    data = {
-        'Generation': [1, 2, 3, 4, 5],
-        'Fitness': [10, 15, 20, 25, 30]
-    }
-    df = pd.DataFrame(data)
-    df.to_csv('fitness_data.csv', index=False)
-    
+ 
 def plot_graph(frame):
     for widget in frame.winfo_children():
         widget.destroy()
         
-    df = pd.read_csv('fitness_data.csv')
+    df = pd.read_csv('fitnessdata.csv', header=None, names=['Generation', 'Average Fit', 'Best Fit'])
 
     fig, ax = plt.subplots()
-    ax.plot(df['Generation'], df['Fitness'], marker='o')
+    ax.plot(df['Generation'], df['Best Fit'], label='Best Fit', marker='o')
+    ax.plot(df['Generation'], df['Average Fit'], label='Average Fit', marker='o')
+    
     ax.set_xlabel('Generation')
     ax.set_ylabel('Fitness')
-    ax.set_title('Fitness vs. Generations')
+    ax.set_title('Fitness Evolution Over Generations')
+
+    ax.legend()
 
     canvas = FigureCanvasTkAgg(fig, master=frame)
     canvas.draw()
@@ -39,7 +35,7 @@ def parse_params_file(filepath):
         with open(filepath, 'r') as file:
             keys = ["Exp ID:", "Prob Type:", "Input File:", "Num Of Runs:", "Gens Per Run:", "Pop Size:", "Selection:",
               "Fit Scale Type:", "Xover Type:", "Xover Rate:", "Mutate Type:", "Mutate Rate:",
-              "Random Seed:", "Fecundity:"]
+              "Random Seed:", "Fecundity:", "Fitness Threshold:"]
             for i, line in enumerate(file):
                 if i < 14:
                     value = line[30:].strip()
@@ -67,6 +63,7 @@ Mutation Type (5)            :{entries['Mutate Type:'].get()}
 Mutation Rate (6)            :{entries['Mutate Rate:'].get()}
 Random Number Seed           :{entries['Random Seed:'].get()}
 Fecundity: (9)               :{entries['Fecundity:'].get()}
+Fitness Threshold            :{entries['Fitness Threshold:'].get()}
 
 Notes:
 
@@ -96,7 +93,7 @@ Notes:
 
 9)  Number of offspring per mating event (each offspring undergoes separate crossover)
 """
-    with open("critters.params", "w") as file:
+    with open("GUIPARAMS.GUI", "w") as file:
         file.write(params_data)
         
      
@@ -128,29 +125,33 @@ def run_ga(terminal):
         stdout, stderr = running_process.communicate()
         if stdout:
             terminal.insert(tk.END, "Compilation Output:\n" + stdout)
+            terminal.see(tk.END)
         if stderr:
             terminal.insert(tk.END, "Compilation Errors:\n" + stderr)
+            terminal.see(tk.END)
 
         if running_process.returncode == 0:
-            running_process = subprocess.Popen(["java", "Search", "critters.params"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            running_process = subprocess.Popen(["java", "Search", "GUIPARAMS.GUI"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             stdout, stderr = running_process.communicate()
             if stdout:
                 terminal.insert(tk.END, "Execution Output:\n" + stdout)
+                terminal.see(tk.END)
             if stderr:
                 terminal.insert(tk.END, "Execution Errors:\n" + stderr)
+                terminal.see(tk.END)
         else:
             terminal.insert(tk.END, "Compilation failed. Java program will not run.\n")
+            terminal.see(tk.END)
     except Exception as e:
         terminal.insert(tk.END, f"An error occurred: {e}\n")
+        terminal.see(tk.END)
 
 
 def main():
     root = tk.Tk()
     root.title("AdaptiCritters v3.4.7")
     root.geometry("1170x930+0+0")
-    root.minsize(1170, 930)
     root.maxsize(1170, 930)
-    create_sample_csv()
 
     frame_params = ttk.Frame(root, borderwidth=3, cursor="arrow")
     frame_params.place(width=300, height=770, x=850, y=30)
@@ -160,7 +161,7 @@ def main():
 
     labels = ["Input File:", "Num Of Runs:", "Gens Per Run:", "Pop Size:", "Selection:",
               "Fit Scale Type:", "Xover Type:", "Xover Rate:", "Mutate Type:", "Mutate Rate:",
-              "Random Seed:", "Fecundity:", "Exp ID:", "Prob Type:"]
+              "Random Seed:", "Fecundity:", "Fitness Threshold:", "Exp ID:", "Prob Type:"]
     entries = {}
 
     for i, label_text in enumerate(labels):
@@ -168,14 +169,14 @@ def main():
         label.place(relwidth=0.5, relheight=0.05, rely=i*0.05)
 
         entry = ttk.Entry(frame_params, font=("Noto Sans", 8), cursor="xterm")
-        entry.place(relx=0.5, relwidth=0.45, rely=i*0.05)
+        entry.place(relx=0.5, relwidth=0.45, relheight=0.05, rely=i*0.05)
         entries[label_text] = entry
 
-    params = parse_params_file("critters.params")
+    params = parse_params_file("GUIPARAMS.GUI")
     populate_entries(entries, params)
 
     params_button = ttk.Button(frame_params, text="Create Params File", command=lambda: save_params(entries))
-    params_button.place(rely=0.7, relwidth=0.95, relheight=0.05)
+    params_button.place(rely=0.75, relwidth=0.95, relheight=0.05)
 
     frame_ga = ttk.Frame(root, borderwidth=3, cursor="arrow")
     frame_ga.place(width=800, height=288, x=30, y=610)
