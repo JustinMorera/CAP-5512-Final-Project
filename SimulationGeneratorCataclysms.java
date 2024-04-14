@@ -92,13 +92,26 @@ public class SimulationGeneratorCataclysms
                             template[currentLine] += "x ";
                         }
                         else 
-                        { // Fitness modifiers from events: Range [-50, 0]
-                            int allele = random.nextInt(51) - 50; 
-                            if (allele >= 0)
+                        { 
+                            if (random.nextInt() % 2 == 0) // Fitness modifiers from events: Range [-50, 0]
                             {
-                                template[currentLine] += "+";
+                                int allele = random.nextInt(51) - 50; 
+                                if (allele >= 0)
+                                {
+                                    template[currentLine] += "+";
+                                }
+                                template[currentLine] += allele + " ";
                             }
-                            template[currentLine] += allele + " ";
+                            else // Fitness modifiers from events: Range [-10, 40]
+                            {
+                                int allele = random.nextInt(51) - 10;
+                                if (allele >= 0)
+                                {
+                                    template[currentLine] += "+";
+                                }
+                                template[currentLine] += allele + " ";
+                            }
+                            
                         }
                     }
                     currentLine += 1;
