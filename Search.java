@@ -449,7 +449,7 @@ public class Search {
 
 			System.out.println(R + "\t" + "B" + "\t"+ (int)bestOfRunChromo.rawFitness);
 
-			phyloOutput.printf("Generation, ID, Genome, AvgFitness\n");
+			phyloOutput.printf("Generation,ID,Genome,AvgFitness\n");
 			// Output all individuals to CSV
 			for (int i = 0; i < phylo.size(); i++) {
 				phyloOutput.printf("%d,%d,%s,%.5f\n", phylo.get(i).startGen, phylo.get(i).id, Arrays.toString(phylo.get(i).chromo).replaceAll("\\[|\\]|,|\\s", ""), phylo.get(i).avgFitness);
