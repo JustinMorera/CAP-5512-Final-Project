@@ -8,7 +8,7 @@ import java.util.ArrayList;
 // import java.io.*;
 // import java.util.*;
 // import java.text.*;
-import java.util.ArrayList;
+// import java.util.ArrayList;
 
 public class Chromo
 {
@@ -31,12 +31,6 @@ public class Chromo
 	public ArrayList<Chromo> children;
     public int startGen;
     public int endGen;
-
-/*******************************************************************************
-*                            INSTANCE VARIABLES                                *
-*******************************************************************************/
-
-	private static double randnum;
 
 /*******************************************************************************
 *                              CONSTRUCTORS                                    *

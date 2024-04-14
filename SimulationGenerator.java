@@ -80,7 +80,7 @@ public class SimulationGenerator
                     }
                     else 
                     {
-                        int allele = random.nextInt(11) - 5; // Range [-5, 5]
+                        int allele = random.nextInt(11) - 9; // Range [-9, 1]
                         if (allele >= 0)
                         {
                             template[currentLine] += "+";

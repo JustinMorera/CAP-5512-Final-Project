@@ -45,7 +45,7 @@ public class Search {
 	public static int G;
 	public static int R;
 	public static Random r = new Random();
-	private static double randnum;
+	// private static double randnum;
 
 	private static int memberIndex[];
 	private static double memberFitness[];
@@ -153,6 +153,24 @@ public class Search {
 				sumRawFitness = 0;
 				sumRawFitness2 = 0;
 				bestOfGenChromo.rawFitness = defaultBest;
+
+				// Apply environmental events!
+				// System.out.println("G: " + G + " next event: " + AdaptiCritters.events.peek().generation);
+				if (AdaptiCritters.events.peek() != null)
+				{
+					if (G == AdaptiCritters.events.peek().generation) // Check if current trigger generation
+					{
+						System.out.println("Environmental Event!");
+						Event currentEvent = AdaptiCritters.events.poll();
+						for (int i = 0; i < AdaptiCritters.genome.length; i++)
+						{
+							for (int j = 0; j < AdaptiCritters.genome[i].length; j++)
+							{
+								AdaptiCritters.genome[i][j] += currentEvent.modifiers[i][j];
+							}
+						}
+					}
+				}
 
 				//	Test Fitness of Each Member
 				for (int i = 0; i < member.size(); i++){
