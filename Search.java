@@ -157,7 +157,7 @@ public class Search {
 					// System.out.println("G: " + G + " next event: " + AdaptiCritters.events.peek().generation);
 					if (AdaptiCritters.events.peek() != null)
 					{
-						if (G == AdaptiCritters.events.peek().generation) // Check if current trigger generation
+						while (G == AdaptiCritters.events.peek().generation) // Check if current trigger generation
 						{
 							System.out.println("Environmental Event!");
 							Event currentEvent = AdaptiCritters.events.poll();
