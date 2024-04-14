@@ -67,8 +67,9 @@ public class AdaptiCritters extends FitnessFunction{
 //  COMPUTE A CHROMOSOME'S RAW FITNESS *************************************
 
 	public void doRawFitness(Chromo X){
-		X.rawFitness = 0;
+		double prevFitness = X.rawFitness;
 
+		X.rawFitness = 0;
     	for (int i = 0; i < X.chromo.length; i++) {
         	int allele = X.chromo[i];
         	if (allele > -1000000)
@@ -83,7 +84,7 @@ public class AdaptiCritters extends FitnessFunction{
     	}
 
 		// Update average fitness of this individual
-		X.avgFitness = ((X.avgFitness * Search.G) + X.rawFitness) / (Search.G + 1);
+		X.avgFitness = ((prevFitness * Search.G) + X.rawFitness) / (Search.G + 1);
 	}
 
 //  PRINT OUT AN INDIVIDUAL GENE TO THE SUMMARY FILE *********************************
