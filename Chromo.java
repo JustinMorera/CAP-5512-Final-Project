@@ -80,10 +80,11 @@ public class Chromo
 	    case 1:     //  Replace with new random number
 	 		for (int i = 0; i < this.chromo.length; i++) {
         		if (Search.r.nextDouble() < Parameters.mutationRate) {
-            		int newGene = Search.r.nextInt(AdaptiCritters.genome.length);
+            		int newGene = Search.r.nextInt(AdaptiCritters.genome[i].length);
             		this.chromo[i] = newGene;
         		}
     		}
+			break;
 	 	default:
  		  System.out.println("ERROR - No mutation method selected");
 	 	}

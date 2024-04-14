@@ -64,7 +64,6 @@ public class AdaptiCritters extends FitnessFunction{
 						}
 					}
 				}
-
 				events.add(new Event(gen, modifiers));
 			}
 			scanner.close();
