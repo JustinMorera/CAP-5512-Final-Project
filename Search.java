@@ -223,15 +223,15 @@ public class Search {
 					}
 
 					// Accumulate fitness statistics
-					fitnessStats[0][G] += sumRawFitness / Parameters.popSize;
+					fitnessStats[0][G] += sumRawFitness / member.size();
 					fitnessStats[1][G] += bestOfGenChromo.rawFitness;
 
-					averageRawFitness = sumRawFitness / Parameters.popSize;
+					averageRawFitness = sumRawFitness / member.size();
 					stdevRawFitness = Math.sqrt(
 								Math.abs(sumRawFitness2 - 
-								sumRawFitness*sumRawFitness/Parameters.popSize)
+								sumRawFitness*sumRawFitness/ member.size())
 								/
-								(Parameters.popSize-1)
+								(member.size())
 								);
 
 					// Output generation statistics to screen
@@ -490,7 +490,7 @@ public class Search {
 				Hwrite.left(i, 15, summaryOutput);
 				Hwrite.left(fitnessStats[0][i]/Parameters.numRuns, 20, 2, summaryOutput);
 				Hwrite.left(fitnessStats[1][i]/Parameters.numRuns, 20, 2, summaryOutput);
-				csvOutput.printf("%d,%.5f,%.5f\n", i, fitnessStats[0][i]/Parameters.numRuns,fitnessStats[1][i]/Parameters.numRuns);
+				if(i!=0)csvOutput.printf("%d,%.5f,%.5f\n", i, fitnessStats[0][i]/Parameters.numRuns,fitnessStats[1][i]/Parameters.numRuns);
 				csvOutput.flush();
 				summaryOutput.write("\n");
 			}
