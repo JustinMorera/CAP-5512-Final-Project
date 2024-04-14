@@ -133,6 +133,11 @@ public class Search {
 
 				bestOfRunChromo.rawFitness = defaultBest;
 				System.out.println();
+        
+        // Create new phylo output file
+			  File phyloFile = new File("phylo" + R + ".csv");
+			  file.delete();
+			  PrintWriter phyloOutput = new PrintWriter(new FileWriter("phylo.csv", true));
 
 			    // Holds history of all individuals and their parent-child relationships
 			    List<Chromo> phylo = new ArrayList<Chromo>();
@@ -461,7 +466,17 @@ public class Search {
 
 				System.out.println(R + "\t" + "B" + "\t"+ (int)bestOfRunChromo.rawFitness);
 
-			} //End of a Run
+			phyloOutput.printf("Generation,ID,Genome,AvgFitness\n");
+			// Output all individuals to CSV
+			for (int i = 0; i < phylo.size(); i++) {
+				phyloOutput.printf("%d,%d,%s,%.5f\n", phylo.get(i).startGen, phylo.get(i).id, Arrays.toString(phylo.get(i).chromo).replaceAll("\\[|\\]|,|\\s", ""), phylo.get(i).avgFitness);
+				phyloOutput.flush();
+			}
+
+			phyloOutput.write("\n");
+			phyloOutput.close();
+
+		} //End of a Run
 
 			Hwrite.left("B", 8, summaryOutput);
 

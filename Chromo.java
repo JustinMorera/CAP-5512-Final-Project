@@ -26,6 +26,7 @@ public class Chromo
 	public double rawFitness;
 	public double sclFitness;
 	public double proFitness;
+	public double avgFitness;
 	public int id; // Tracks individual by ID# for phylogeny
     public ArrayList<Chromo> parents;
 	public ArrayList<Chromo> children;
@@ -52,6 +53,7 @@ public class Chromo
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled
 		this.proFitness = -1;   //  Fitness not yet proportionalized
+		this.avgFitness = -1;
 	}
 
 
