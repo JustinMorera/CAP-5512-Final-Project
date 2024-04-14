@@ -136,7 +136,7 @@ public class Search {
         
         // Create new phylo output file
 			  File phyloFile = new File("phylo" + R + ".csv");
-			  file.delete();
+			  phyloFile.delete();
 			  PrintWriter phyloOutput = new PrintWriter(new FileWriter("phylo.csv", true));
 
 			    // Holds history of all individuals and their parent-child relationships
