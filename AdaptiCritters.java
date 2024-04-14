@@ -21,8 +21,9 @@ public class AdaptiCritters extends FitnessFunction{
 	//  Assumes no more than 100 values in the data file
 	public static int[] testValue = new int[100];
 	public static int[][] genome; // Whole genome for entire scenario
+	public static Queue<Event> events;
 
-	static { // Fill genome array with genes and their alleles
+	static { 
 		try {
 			File template = new File(Parameters.dataInputFileName);
 			Scanner scanner = new Scanner(template);
@@ -30,7 +31,7 @@ public class AdaptiCritters extends FitnessFunction{
 			int numGenes = scanner.nextInt();
 			genome = new int[numGenes][];
 
-			for (int i = 0; i < numGenes; i++) {
+			for (int i = 0; i < numGenes; i++) { // Fill genome array with genes and their alleles
 				int numAlleles = scanner.nextInt();
 				genome[i] = new int[numAlleles];
 				
@@ -41,6 +42,28 @@ public class AdaptiCritters extends FitnessFunction{
 						String allele = scanner.next();
 						genome[i][j] = allele.equals("x") ? -1000000 : Integer.parseInt(allele);
 					}
+				}
+			}
+
+			int numEvents = scanner.nextInt();
+			int numGenerations = scanner.nextInt(); // Unused
+			events = new LinkedList<Event>();
+
+			for (int i = 0; i < numEvents; i++) { // Fill events queue with modifers
+				int gen = scanner.nextInt();
+				int[][] modifiers = new int[numGenes][];			
+				for (int j = 0; j < numGenes; j++) {
+					modifiers[j] = new int[genome[j].length];
+					for (int k = 0; k < modifiers[j].length; k++)
+					{
+						if (scanner.hasNextInt()) {
+							modifiers[j][k] = scanner.nextInt();
+						} else if (scanner.hasNext()) {
+							String mod = scanner.next();
+							modifiers[j][k] = mod.equals("x") ? -1000000 : Integer.parseInt(mod);
+						}
+					}
+					events.add(new Event(gen, modifiers));
 				}
 			}
 			scanner.close();
