@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.util.Random;
 import java.util.Arrays;
 
-public class SimulationGenerator
+public class SimulationGeneratorCataclysms 
 {
     public static int numGenes;
 	public static int numGens;
@@ -52,9 +52,20 @@ public class SimulationGenerator
         template[currentLine++] = args[1] + " " + args[2]; // numEvents numGens
 
         int[]eventGens = new int[numEvents];
+        int catGen = (int)Math.sqrt(numGens); // Spaces out cataclysms by the square root of the number of generations
         for (int i = 0; i < numEvents; i++)
         {
-            eventGens[i] = random.nextInt(numGens);
+            if ((i > 0) && (i < catGen)) // Ensures a cataclysm every at every catGen
+            {
+                eventGens[i] = catGen * i;
+            }
+            else
+            {
+                do 
+                { // Prevents randomly generated events from co-occuring with cataclysms
+                    eventGens[i] = random.nextInt(numGens);
+                }while (eventGens[i] % catGen == 0);
+            }
         }
         Arrays.sort(eventGens);
         System.out.print("EventGens: ");
@@ -67,28 +78,57 @@ public class SimulationGenerator
         for (int i = 0; i < numEvents; i++)
         {
             template[currentLine++] += eventGens[i];
-            for (int j = 0; j < numGenes; j++)
+            if (eventGens[i] % catGen == 0) // Checks for cataclysm
             {
-                String[] tempStrings = template[1 + j].split(" ");
-                int numAlleles = Integer.parseInt(tempStrings[0]);
-
-                for (int k = 0; k < numAlleles; k++) 
+                for (int j = 0; j < numGenes; j++)
                 {
-                    if (tempStrings[k + 1].equals("x"))
+                    String[] tempStrings = template[1 + j].split(" ");
+                    int numAlleles = Integer.parseInt(tempStrings[0]);
+
+                    for (int k = 0; k < numAlleles; k++) 
                     {
-                        template[currentLine] += "x ";
-                    }
-                    else 
-                    { // Fitness modifiers from events: Range [-10, 10]
-                        int allele = random.nextInt(21) - 10; 
-                        if (allele >= 0)
+                        if (tempStrings[k + 1].equals("x"))
                         {
-                            template[currentLine] += "+";
+                            template[currentLine] += "x ";
                         }
-                        template[currentLine] += allele + " ";
+                        else 
+                        { // Fitness modifiers from events: Range [-50, 0]
+                            int allele = random.nextInt(51) - 50; 
+                            if (allele >= 0)
+                            {
+                                template[currentLine] += "+";
+                            }
+                            template[currentLine] += allele + " ";
+                        }
                     }
+                    currentLine += 1;
                 }
-                currentLine += 1;
+            }
+            else
+            {
+                for (int j = 0; j < numGenes; j++)
+                {
+                    String[] tempStrings = template[1 + j].split(" ");
+                    int numAlleles = Integer.parseInt(tempStrings[0]);
+    
+                    for (int k = 0; k < numAlleles; k++) 
+                    {
+                        if (tempStrings[k + 1].equals("x"))
+                        {
+                            template[currentLine] += "x ";
+                        }
+                        else 
+                        { // Fitness modifiers from events: Range [-10, 10]
+                            int allele = random.nextInt(21) - 10; 
+                            if (allele >= 0)
+                            {
+                                template[currentLine] += "+";
+                            }
+                            template[currentLine] += allele + " ";
+                        }
+                    }
+                    currentLine += 1;
+                }
             }
         }
 
@@ -151,7 +191,7 @@ public class SimulationGenerator
 
 
         // Write the template to a file
-        String filename = "AdaptiCritters_Template_numGenes_" + numGenes + "_numEvents_" + numEvents + "_numGenerations_" + numGens + "lethalChance_" + lethalChance + ".txt";
+        String filename = "Cataclysms_AdaptiCritters_Template_numGenes_" + numGenes + "_numEvents_" + numEvents + "_numGenerations_" + numGens + "lethalChance_" + lethalChance + ".txt";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             for (String line : template) {
                 writer.println(line);
