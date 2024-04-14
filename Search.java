@@ -408,6 +408,11 @@ public class Search {
 									// newChild.sclFitness = -1;   //  Fitness not yet scaled
 									// newChild.proFitness = -1;   //  Fitness not yet proportionalized
 
+									//	Mutate Children
+									for (int i=0; i<Parameters.popSize; i++){
+										newChild.doMutation();
+									}
+									
 									// Record child's parents
 									parent1.children.add(newChild);
 									parent2.children.add(newChild);
@@ -425,6 +430,11 @@ public class Search {
 								Chromo newChild = child.get(child.size() - 1);
 								newChild.chromo = Chromo.mateParents(parent1, parent2);
 
+								//	Mutate Children
+								for (int i=0; i<Parameters.popSize; i++){
+									newChild.doMutation();
+								}
+
 								parent1.children.add(newChild);
 								parent2.children.add(newChild);
 								newChild.parents.add(parent1);
@@ -441,11 +451,6 @@ public class Search {
 							}
 						}					
 					} // End Crossover
-
-					//	Mutate Children
-					for (int i=0; i<Parameters.popSize; i++){
-						// child[i].doMutation();
-					}
 
 					//	ADD Children to Last Generation
 					for (int i = 0; i < child.size(); i++){
