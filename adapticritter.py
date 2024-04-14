@@ -10,12 +10,26 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 def plot_graph(frame):
     for widget in frame.winfo_children():
         widget.destroy()
-        
-    df = pd.read_csv('fitnessdata.csv', header=None, names=['Generation', 'Average Fit', 'Best Fit'])
+    
+    df = pd.read_csv('fitnessdata.csv', header=None, names=['Generation', 'Average Fit', 'Best Fit', 'Population'])
+
+    if df['Population'].max() > 100000:
+        dividing_number = 1000
+        population_label = 'Population (divided by 1000)'
+    elif df['Population'].max() > 10000:
+        dividing_number = 100
+        population_label = 'Population (divided by 100)'
+    elif df['Population'].max() > 1000:
+        dividing_number = 10
+        population_label = 'Population (divided by 10)'
+    else:
+        dividing_number = 1 
+        population_label = 'Population'
 
     fig, ax = plt.subplots()
     ax.plot(df['Generation'], df['Best Fit'], label='Best Fit', marker='o')
     ax.plot(df['Generation'], df['Average Fit'], label='Average Fit', marker='o')
+    ax.plot(df['Generation'], df['Population']/dividing_number, label=population_label, marker='o')
     
     ax.set_xlabel('Generation')
     ax.set_ylabel('Fitness')
@@ -26,8 +40,6 @@ def plot_graph(frame):
     canvas = FigureCanvasTkAgg(fig, master=frame)
     canvas.draw()
     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-
-
 
 def parse_params_file(filepath):
     params = {}

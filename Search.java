@@ -89,10 +89,11 @@ public class Search {
         file.delete();
 		try (PrintWriter csvOutput = new PrintWriter(new FileWriter("fitnessdata.csv", true))) {
 			//	Set up Fitness Statistics matrix
-			fitnessStats = new double[2][Parameters.generations];
+			fitnessStats = new double[3][Parameters.generations];
 			for (int i=0; i<Parameters.generations; i++){
 				fitnessStats[0][i] = 0;
 				fitnessStats[1][i] = 0;
+				fitnessStats[2][i] = 0;
 			}
 
 			//	Problem Specific Setup - For new new fitness function problems, create
@@ -225,6 +226,7 @@ public class Search {
 					// Accumulate fitness statistics
 					fitnessStats[0][G] += sumRawFitness / member.size();
 					fitnessStats[1][G] += bestOfGenChromo.rawFitness;
+					fitnessStats[2][G] = member.size();
 
 					averageRawFitness = sumRawFitness / member.size();
 					stdevRawFitness = Math.sqrt(
@@ -486,7 +488,7 @@ public class Search {
 				Hwrite.left(i, 15, summaryOutput);
 				Hwrite.left(fitnessStats[0][i]/Parameters.numRuns, 20, 2, summaryOutput);
 				Hwrite.left(fitnessStats[1][i]/Parameters.numRuns, 20, 2, summaryOutput);
-				if(i!=0)csvOutput.printf("%d,%.5f,%.5f\n", i, fitnessStats[0][i]/Parameters.numRuns,fitnessStats[1][i]/Parameters.numRuns);
+				if(i!=0)csvOutput.printf("%d,%.5f,%.5f,%.5f\n", i, fitnessStats[0][i]/Parameters.numRuns,fitnessStats[1][i]/Parameters.numRuns,fitnessStats[2][i]);
 				csvOutput.flush();
 				summaryOutput.write("\n");
 			}
