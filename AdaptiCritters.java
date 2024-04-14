@@ -63,8 +63,9 @@ public class AdaptiCritters extends FitnessFunction{
 							modifiers[j][k] = mod.equals("x") ? -1000000 : Integer.parseInt(mod);
 						}
 					}
-					events.add(new Event(gen, modifiers));
 				}
+
+				events.add(new Event(gen, modifiers));
 			}
 			scanner.close();
 
