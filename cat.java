@@ -1,10 +1,7 @@
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Random;
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
 
-public class SimulationGeneratorCataclysms 
+public class cat 
 {
     public static int numGenes;
 	public static int numGens;
@@ -26,19 +23,19 @@ public class SimulationGeneratorCataclysms
 
         // Randomly assign number of alleles for each gene and fitness values for each allele
         for (int i = 0; i < numGenes; i++) 
-        { // Number of alleles per gene: Range [2, 10]
-            int numAlleles = random.nextInt(9) + 2; 
+        { // Number of alleles per gene: Range [2, 100]
+            int numAlleles = random.nextInt(10) + 2; 
             template[currentLine] += numAlleles + " ";
 
             for (int j = 0; j < numAlleles; j++) 
             {
-                if (random.nextDouble() <= lethalChance) 
+                if (random.nextDouble() <= lethalChance/4) 
                 {
                     template[currentLine] += "x ";
                 }
                 else 
                 { // Base fitness values per allele: Range [-50, 50]
-                    int allele = random.nextInt(101) - 50; 
+                    int allele = random.nextInt(201) - 100; 
                     if (allele >= 0)
                     {
                         template[currentLine] += "+";
@@ -93,18 +90,18 @@ public class SimulationGeneratorCataclysms
                         }
                         else 
                         { 
-                            if (random.nextInt() % 2 == 0) // Fitness modifiers from events: Range [-50, 0]
+                            if (random.nextInt() % 2 == 0) // Fitness modifiers from events: Range [-100, 0]
                             {
-                                int allele = random.nextInt(51) - 50; 
+                                int allele = random.nextInt(50) - 50; 
                                 if (allele >= 0)
                                 {
                                     template[currentLine] += "+";
                                 }
                                 template[currentLine] += allele + " ";
                             }
-                            else // Fitness modifiers from events: Range [-10, 40]
+                            else // Fitness modifiers from events: Range [0, 25]
                             {
-                                int allele = random.nextInt(51) - 10;
+                                int allele = random.nextInt(25);
                                 if (allele >= 0)
                                 {
                                     template[currentLine] += "+";
@@ -204,7 +201,9 @@ public class SimulationGeneratorCataclysms
 
 
         // Write the template to a file
-        String filename = "Cataclysms_AdaptiCritters_Template_numGenes_" + numGenes + "_numEvents_" + numEvents + "_numGenerations_" + numGens + "lethalChance_" + lethalChance + ".txt";
+        File file = new File("list.txt");
+        file.delete();
+        String filename = "list.txt";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             for (String line : template) {
                 writer.println(line);

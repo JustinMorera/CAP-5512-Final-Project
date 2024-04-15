@@ -89,11 +89,13 @@ public class Search {
         file.delete();
 		try (PrintWriter csvOutput = new PrintWriter(new FileWriter("fitnessdata.csv", true))) {
 			//	Set up Fitness Statistics matrix
-			fitnessStats = new double[3][Parameters.generations];
+			fitnessStats = new double[5][Parameters.generations];
 			for (int i=0; i<Parameters.generations; i++){
 				fitnessStats[0][i] = 0;
 				fitnessStats[1][i] = 0;
 				fitnessStats[2][i] = 0;
+				fitnessStats[3][i] = 0;
+				fitnessStats[4][i] = 0;
 			}
 
 			//	Problem Specific Setup - For new new fitness function problems, create
@@ -131,7 +133,7 @@ public class Search {
 
 			//  Start program for multiple runs
 			for (R = 1; R <= Parameters.numRuns; R++){
-
+				
 				bestOfRunChromo.rawFitness = defaultBest;
 				System.out.println();
         
@@ -164,6 +166,7 @@ public class Search {
 					while (AdaptiCritters.events.peek() != null && G == AdaptiCritters.events.peek().generation) // Check if current trigger generation
 					{
 						System.out.println("Environmental Event!");
+						fitnessStats[4][G] = 1;
 						Event currentEvent = AdaptiCritters.events.poll();
 						for (int i = 0; i < AdaptiCritters.genome.length; i++)
 						{
@@ -224,9 +227,10 @@ public class Search {
 					}
 
 					// Accumulate fitness statistics
-					fitnessStats[0][G] += sumRawFitness / member.size();
-					fitnessStats[1][G] += bestOfGenChromo.rawFitness;
+					fitnessStats[0][G] = sumRawFitness / member.size();
+					fitnessStats[1][G] = bestOfGenChromo.rawFitness;
 					fitnessStats[2][G] = member.size();
+					fitnessStats[3][G] = Chromo.cumPop;
 
 					averageRawFitness = sumRawFitness / member.size();
 					stdevRawFitness = Math.sqrt(
@@ -488,7 +492,12 @@ public class Search {
 				Hwrite.left(i, 15, summaryOutput);
 				Hwrite.left(fitnessStats[0][i]/Parameters.numRuns, 20, 2, summaryOutput);
 				Hwrite.left(fitnessStats[1][i]/Parameters.numRuns, 20, 2, summaryOutput);
-				if(i!=0)csvOutput.printf("%d,%.5f,%.5f,%.5f\n", i, fitnessStats[0][i]/Parameters.numRuns,fitnessStats[1][i]/Parameters.numRuns,fitnessStats[2][i]);
+				csvOutput.printf("%d,%.5f,%.5f,%.5f,%.5f,%.5f\n", i,
+					(fitnessStats[0][i] > 1000000 || fitnessStats[0][i] < -1000000 || i == 0) ? 0 : (fitnessStats[0][i]/Parameters.numRuns),
+					(fitnessStats[1][i] > 1000000 || fitnessStats[1][i] < -1000000 || i == 0) ? 0 : (fitnessStats[1][i]/Parameters.numRuns),
+					fitnessStats[2][i],
+					fitnessStats[3][i],
+					fitnessStats[4][i]);
 				csvOutput.flush();
 				summaryOutput.write("\n");
 			}
