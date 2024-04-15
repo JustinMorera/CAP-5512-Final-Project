@@ -16,7 +16,7 @@ def hamming_distance(seq1, seq2):
     return distance
 
 # Main parameters
-sample_size = 5
+sample_size = 100
 
 csv_path = "phylo.csv"
 df = pd.read_csv(csv_path, dtype={"Genome": str})
