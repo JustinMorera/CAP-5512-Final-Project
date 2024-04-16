@@ -363,11 +363,6 @@ public class Search {
 					Chromo parent2 = null;
 					ArrayList<Integer> chosen = new ArrayList<Integer>();
 
-					for (int i = 0; i < numGenes; i++)
-					{
-
-					}
-
 					// Remove unfit members from population
 					for (int i = 0; i < member.size(); i++)
 					{
