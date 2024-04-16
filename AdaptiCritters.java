@@ -40,7 +40,7 @@ public class AdaptiCritters extends FitnessFunction{
 						genome[i][j] = scanner.nextInt();
 					} else if (scanner.hasNext()) {
 						String allele = scanner.next();
-						genome[i][j] = allele.equals("x") ? -1000000 : Integer.parseInt(allele);
+						genome[i][j] = allele.equals("x") ? -1000 : Integer.parseInt(allele);
 					}
 				}
 			}
@@ -60,7 +60,7 @@ public class AdaptiCritters extends FitnessFunction{
 							modifiers[j][k] = scanner.nextInt();
 						} else if (scanner.hasNext()) {
 							String mod = scanner.next();
-							modifiers[j][k] = mod.equals("x") ? -1000000 : Integer.parseInt(mod);
+							modifiers[j][k] = mod.equals("x") ? -1000 : Integer.parseInt(mod);
 						}
 					}
 				}
@@ -95,13 +95,13 @@ public class AdaptiCritters extends FitnessFunction{
 		X.rawFitness = 0;
     	for (int i = 0; i < X.chromo.length; i++) {
         	int allele = X.chromo[i];
-        	if (allele > -1000000)
+        	if (allele > -1000)
 				{
 					X.rawFitness += genome[i][allele];
 				}
 			else
 			{
-				X.rawFitness = -1000000;
+				X.rawFitness = -1000;
 				break;
 			}
     	}
