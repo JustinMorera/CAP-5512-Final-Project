@@ -4,6 +4,10 @@
 # Text files
 *.txt
 
+# Image files
+
+*.png
+
 # Log file
 *.log
 

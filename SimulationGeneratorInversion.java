@@ -2,7 +2,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class SimulationGeneratorInversion
 {
@@ -60,12 +62,17 @@ public class SimulationGeneratorInversion
 
         template[currentLine++] = args[1] + " " + args[2]; // numEvents numGens
 
-        int[]eventGens = new int[numEvents];
+        ArrayList<Integer> eventGens = new ArrayList<Integer>();
+        Integer r;
         for (int i = 0; i < numEvents; i++)
         {
-            eventGens[i] = random.nextInt(numGens);
+            do 
+            {
+                r = random.nextInt(numGens);
+            } while (eventGens.contains(r));
+            eventGens.add(r);
         }
-        Arrays.sort(eventGens);
+        Collections.sort(eventGens);
         System.out.print("EventGens: ");
         for (int event : eventGens)
         {
@@ -75,7 +82,7 @@ public class SimulationGeneratorInversion
 
         for (int i = 0; i < numEvents; i++)
         {
-            template[currentLine++] += eventGens[i];
+            template[currentLine++] += eventGens.get(i);
             for (int j = 0; j < numGenes; j++)
             {
                 String[] tempStrings = template[1 + j].split(" ");
@@ -89,7 +96,7 @@ public class SimulationGeneratorInversion
                     }
                     else if (j % 2 == 0) // Even genes become detrimental
                     { // Fitness modifiers from events: Range [-20, 0]
-                        int allele = random.nextInt(21) - 20; 
+                        int allele = -8; 
                         if (allele >= 0)
                         {
                             template[currentLine] += "+";
@@ -98,7 +105,7 @@ public class SimulationGeneratorInversion
                     }
                     else // Odd genes become beneficial
                     { // Fitness modifiers from events: Range [0, 20]
-                        int allele = random.nextInt(21); 
+                        int allele = 10; 
                         if (allele >= 0)
                         {
                             template[currentLine] += "+";
