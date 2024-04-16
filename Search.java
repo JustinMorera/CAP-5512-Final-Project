@@ -533,6 +533,17 @@ public class Search {
 		Date endTime = dateAndTime.getTime();
 		System.out.println("End  :  " + endTime);
 
+		File YAFile = new File("allele.csv");
+		YAFile.delete();
+		PrintWriter YAPW = new PrintWriter(new FileWriter("allele.csv", true));
+
+		for(int i = 0; i < AdaptiCritters.alleleFrequency.length; i++){
+			for(int j = 0; j < AdaptiCritters.alleleFrequency[i].length; j++){
+				YAPW.printf("%d,%d,%.5f\n", i, j, AdaptiCritters.alleleFrequency[i][j]);
+				YAPW.flush();
+			}
+		}
+
 	} // End of Main Class
 
 }   // End of Search.Java ******************************************************
