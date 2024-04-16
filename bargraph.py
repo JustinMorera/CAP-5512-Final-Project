@@ -3,17 +3,19 @@ import matplotlib.pyplot as plt
 
 data = pd.read_csv('allele.csv', header=None, names=['gene', 'allele', 'frequency'])
 
-data['gene'] = data['gene'].astype(str)
-data['allele'] = data['allele'].astype(str)
+pivot_data = data.pivot_table(index='gene', columns='allele', values='frequency', fill_value=0)
 
-data['Label'] = data['gene'] + ', ' + data['allele']
+plt.figure(figsize=(14, 8))
 
-plt.figure(figsize=(10, 8))
-plt.bar(data['Label'], data['frequency'], color='blue')
-plt.xlabel('Gene, Allele')
+pivot_data.plot(kind='bar', stacked=True, colormap='viridis', edgecolor='black')
+
+plt.xlabel('Gene')
 plt.ylabel('Frequency')
-plt.title('Frequency of Alleles')
-plt.xticks(rotation=45)
+plt.title('Stacked Frequency of Alleles per Gene')
+plt.xticks(rotation=0)
+plt.legend(title='Allele', bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.tight_layout()
-plt.savefig('gene_allele_frequency_chart.png', format='png', dpi=300)
+
+plt.savefig('bar_graph.png', format='png', dpi=300)
+plt.show()
 
