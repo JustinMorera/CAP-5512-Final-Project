@@ -377,6 +377,13 @@ public class Search {
 							member.remove(i);
 							i--;
 						}
+					} // Normalize allele counts based on pop to get frequency
+					for (double[] row : AdaptiCritters.alleleFrequency)
+					{
+						for (int i = 0; i < row.length; i++)
+						{
+							row[i] /= member.size();
+						}
 					}
 					// System.out.println("After death: ");
 					// for (Chromo indiv : member)
