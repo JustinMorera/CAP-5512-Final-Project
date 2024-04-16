@@ -370,10 +370,10 @@ public class Search {
 						for (int j = 0; j < AdaptiCritters.genome.length; j++)
 						{
 							int allele = individual.chromo[j];
-							AdaptiCritters.alleleFrequency[j][allele]++;
+							AdaptiCritters.alleleFrequency[G][j][allele]++;
 						}
 					} // Normalize allele counts based on pop to get frequency
-					for (double[] row : AdaptiCritters.alleleFrequency)
+					for (double[] row : AdaptiCritters.alleleFrequency[G])
 					{
 						for (int i = 0; i < row.length; i++)
 						{
@@ -539,9 +539,12 @@ public class Search {
 
 		for(int i = 0; i < AdaptiCritters.alleleFrequency.length; i++){
 			for(int j = 0; j < AdaptiCritters.alleleFrequency[i].length; j++){
-				YAPW.printf("%d,%d,%.5f\n", i, j, AdaptiCritters.alleleFrequency[i][j]);
-				YAPW.flush();
+				for(int k = 0; k < AdaptiCritters.alleleFrequency[i][j].length; k++){
+					YAPW.printf("%d,%d,%d,%.5f\n", i, j, k, AdaptiCritters.alleleFrequency[i][j][k]);
+					YAPW.flush();
+				}
 			}
+			
 		}
 
 	} // End of Main Class
