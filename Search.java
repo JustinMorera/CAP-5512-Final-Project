@@ -363,7 +363,7 @@ public class Search {
 					Chromo parent2 = null;
 					ArrayList<Integer> chosen = new ArrayList<Integer>();
 
-					// Remove unfit members from population
+					// Track alleles in population
 					for (int i = 0; i < member.size(); i++)
 					{
 						Chromo individual = member.get(i);
@@ -372,17 +372,28 @@ public class Search {
 							int allele = individual.chromo[j];
 							AdaptiCritters.alleleFrequency[j][allele]++;
 						}
+					} // Normalize allele counts based on pop to get frequency
+					for (double[] row : AdaptiCritters.alleleFrequency)
+					{
+						System.out.println();
+						System.out.println();
+						for (int i = 0; i < row.length; i++)
+						{
+							row[i] /= member.size();
+							System.out.print(row[i]);
+						}
+						System.out.println();
+						System.out.println(member.size());
+						System.out.println();
+					}
+					// Remove unfit members from population
+					for (int i = 0; i < member.size(); i++)
+					{
+						Chromo individual = member.get(i);
 						if (individual.rawFitness <= Parameters.fitnessThreshold) {
 							individual.endGen = G;
 							member.remove(i);
 							i--;
-						}
-					} // Normalize allele counts based on pop to get frequency
-					for (double[] row : AdaptiCritters.alleleFrequency)
-					{
-						for (int i = 0; i < row.length; i++)
-						{
-							row[i] /= member.size();
 						}
 					}
 					// System.out.println("After death: ");
