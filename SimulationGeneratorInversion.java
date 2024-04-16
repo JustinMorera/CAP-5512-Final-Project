@@ -29,9 +29,9 @@ public class SimulationGeneratorInversion
         // Randomly assign number of alleles for each gene and fitness values for each allele
         for (int i = 0; i < numGenes; i++) 
         { // Number of alleles per gene: Range [2, 10]
-            int numAlleles = random.nextInt(9) + 2; 
+            int numAlleles = 10; 
             template[currentLine] += numAlleles + " ";
-
+            int b = 0, d = 0;
             for (int j = 0; j < numAlleles; j++) 
             {
                 if (random.nextDouble() <= lethalChance) 
@@ -40,7 +40,8 @@ public class SimulationGeneratorInversion
                 }
                 else if (i % 2 == 0) // Even genes are beneficial
                 { // Base fitness values per allele: Range [0, 50]
-                    int allele = random.nextInt(51); 
+                    int allele = b; 
+                    b += 2;
                     if (allele >= 0)
                     {
                         template[currentLine] += "+";
@@ -49,7 +50,8 @@ public class SimulationGeneratorInversion
                 }
                 else // Odd genes are detrimental
                 { // Base fitness values per allele: Range [-50, 0]
-                    int allele = random.nextInt(51) - 50; 
+                    int allele = d;
+                    d -= 2;
                     if (allele >= 0)
                     {
                         template[currentLine] += "+";
@@ -61,7 +63,7 @@ public class SimulationGeneratorInversion
         }
 
         template[currentLine++] = args[1] + " " + args[2]; // numEvents numGens
-
+        // Randomly assign event trigger generations
         ArrayList<Integer> eventGens = new ArrayList<Integer>();
         Integer r;
         for (int i = 0; i < numEvents; i++)
@@ -79,7 +81,9 @@ public class SimulationGeneratorInversion
             System.out.print(event + " ");
         }
         System.out.print("\n");
-
+        // Randomly assign modifiers for each allele for every event
+        int b = 2;
+        int d = -2;
         for (int i = 0; i < numEvents; i++)
         {
             template[currentLine++] += eventGens.get(i);
@@ -96,7 +100,7 @@ public class SimulationGeneratorInversion
                     }
                     else if (j % 2 == 0) // Even genes become detrimental
                     { // Fitness modifiers from events: Range [-20, 0]
-                        int allele = -8; 
+                        int allele = d; 
                         if (allele >= 0)
                         {
                             template[currentLine] += "+";
@@ -105,7 +109,7 @@ public class SimulationGeneratorInversion
                     }
                     else // Odd genes become beneficial
                     { // Fitness modifiers from events: Range [0, 20]
-                        int allele = 10; 
+                        int allele = b; 
                         if (allele >= 0)
                         {
                             template[currentLine] += "+";
@@ -115,6 +119,8 @@ public class SimulationGeneratorInversion
                 }
                 currentLine += 1;
             }
+            b += 2;
+            d -= 2;
         }
 
 
@@ -181,7 +187,7 @@ public class SimulationGeneratorInversion
             for (String line : template) {
                 writer.println(line);
             }
-            System.out.println("List successfully saved to list.txt");
+            System.out.println("List successfully saved to "+ filename);
         } catch (IOException e) {
             System.out.println("An error occurred while writing to file.");
             e.printStackTrace();
