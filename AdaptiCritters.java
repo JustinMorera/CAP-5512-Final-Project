@@ -21,6 +21,7 @@ public class AdaptiCritters extends FitnessFunction{
 	//  Assumes no more than 100 values in the data file
 	public static int[] testValue = new int[100];
 	public static int[][] genome; // Whole genome for entire scenario
+	public static double alleleFrequency[][]; // Used to calculate the distribution of alleles for each generation
 	public static Queue<Event> events;
 
 	static { 
@@ -30,12 +31,15 @@ public class AdaptiCritters extends FitnessFunction{
 
 			int numGenes = scanner.nextInt();
 			genome = new int[numGenes][];
+			alleleFrequency = new double[numGenes][];
 
 			for (int i = 0; i < numGenes; i++) { // Fill genome array with genes and their alleles
 				int numAlleles = scanner.nextInt();
 				genome[i] = new int[numAlleles];
+				alleleFrequency[i] = new double[numAlleles];
 				
 				for (int j = 0; j < numAlleles; j++) {
+					alleleFrequency[i][j] = 0;
 					if (scanner.hasNextInt()) {
 						genome[i][j] = scanner.nextInt();
 					} else if (scanner.hasNext()) {

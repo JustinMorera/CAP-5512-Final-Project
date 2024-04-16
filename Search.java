@@ -363,10 +363,20 @@ public class Search {
 					Chromo parent2 = null;
 					ArrayList<Integer> chosen = new ArrayList<Integer>();
 
+					for (int i = 0; i < numGenes; i++)
+					{
+
+					}
+
 					// Remove unfit members from population
 					for (int i = 0; i < member.size(); i++)
 					{
 						Chromo individual = member.get(i);
+						for (int j = 0; j < AdaptiCritters.genome.length; j++)
+						{
+							int allele = individual.chromo[j];
+							AdaptiCritters.alleleFrequency[j][allele]++;
+						}
 						if (individual.rawFitness <= Parameters.fitnessThreshold) {
 							individual.endGen = G;
 							member.remove(i);
