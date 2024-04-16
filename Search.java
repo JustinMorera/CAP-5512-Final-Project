@@ -363,6 +363,24 @@ public class Search {
 					Chromo parent2 = null;
 					ArrayList<Integer> chosen = new ArrayList<Integer>();
 
+					// Track alleles in population
+					for (int i = 0; i < member.size(); i++)
+					{
+						Chromo individual = member.get(i);
+						for (int j = 0; j < AdaptiCritters.genome.length; j++)
+						{
+							int allele = individual.chromo[j];
+							AdaptiCritters.alleleFrequency[G][j][allele]++;
+						}
+					} // Normalize allele counts based on pop to get frequency
+					for (double[] row : AdaptiCritters.alleleFrequency[G])
+					{
+						for (int i = 0; i < row.length; i++)
+						{
+							row[i] /= member.size();
+							System.out.print(row[i]);
+						}
+					}
 					// Remove unfit members from population
 					for (int i = 0; i < member.size(); i++)
 					{
@@ -514,6 +532,20 @@ public class Search {
 		dateAndTime = Calendar.getInstance(); 
 		Date endTime = dateAndTime.getTime();
 		System.out.println("End  :  " + endTime);
+
+		File YAFile = new File("allele.csv");
+		YAFile.delete();
+		PrintWriter YAPW = new PrintWriter(new FileWriter("allele.csv", true));
+
+		for(int i = 0; i < AdaptiCritters.alleleFrequency.length; i++){
+			for(int j = 0; j < AdaptiCritters.alleleFrequency[i].length; j++){
+				for(int k = 0; k < AdaptiCritters.alleleFrequency[i][j].length; k++){
+					YAPW.printf("%d,%d,%d,%.5f\n", i, j, k, AdaptiCritters.alleleFrequency[i][j][k]);
+					YAPW.flush();
+				}
+			}
+			
+		}
 
 	} // End of Main Class
 
