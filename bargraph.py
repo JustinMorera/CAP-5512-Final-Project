@@ -11,7 +11,7 @@ pivot_data.plot(kind='bar', stacked=True, colormap='viridis', edgecolor='black')
 
 plt.xlabel('Gene')
 plt.ylabel('Frequency')
-plt.title('Stacked Frequency of Alleles per Gene')
+plt.title('Frequency of Alleles per Gene')
 plt.xticks(rotation=0)
 plt.legend(title='Allele', bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.tight_layout()
